@@ -101,7 +101,7 @@ module.exports = async (api, msg, search) => {
       if (fs.existsSync(name)) {
         fs.unlinkSync(name, (e) => {});
       }
-    }, 10000);
+    }, 60000);
   } catch (error) {
     logs(`ERR: ${error}`);
     api
