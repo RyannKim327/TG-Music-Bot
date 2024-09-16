@@ -9,7 +9,15 @@ const logs = (_logs) => {
   fs.writeFileSync("logs.txt", current, "utf8");
 };
 
-module.exports = async (api, msg, search) => {
+const _music = async (api, msg, search, n = 1) => {
+  api
+    .sendMessage(msg.chat.id, `Trial search: ${n}`)
+    .then((r) => {
+      setTimeout(() => {
+        api.deleteMessage(r.chat.id, r.message_id);
+      }, 2500);
+    })
+    .catch((e) => {});
   try {
     const yt = await Innertube.create({
       cache: new UniversalCache(false),
@@ -55,7 +63,9 @@ module.exports = async (api, msg, search) => {
       })
       .catch((e) => {
         logs(`ERR: ${e}`);
-        api.sendMessage(msg.chat.id, JSON.stringify(e));
+        setTimeout(() => {
+          api.sendMessage(msg.chat.id, JSON.stringify(e));
+        }, 2500);
       });
 
     api
@@ -88,6 +98,7 @@ module.exports = async (api, msg, search) => {
         if (fs.existsSync(name)) {
           setTimeout(() => {
             fs.unlinkSync(name, (e) => {});
+            _music(api, msg, search, n + 1);
           }, 10000);
         }
         api
@@ -118,6 +129,9 @@ module.exports = async (api, msg, search) => {
       .catch((e) => {
         console.error(`ERR: ${JSON.stringify(e)}`);
       });
+    // _music(api, msg, search, n + 1);
     // await api.deleteMessage(msg.chat.id, msg.message_id);
   }
 };
+
+module.exports = _music;
