@@ -72,22 +72,26 @@ module.exports = async (api, msg, search) => {
       .then((r) => {
         console.log(`INFO: ${JSON.stringify(r)}`);
         logs(`INFO: ${JSON.stringify(r)}`);
+        console.log("Sent");
         if (fs.existsSync(name)) {
           setTimeout(() => {
             if (fs.existsSync(name)) {
               fs.unlinkSync(name, (e) => {});
             }
-          }, 2500);
+          }, 10000);
         }
       })
       .catch((error) => {
+        if (error) {
+          console.log(`ERR [Send Audio]: ${JSON.stringify(error)}`);
+        }
         if (fs.existsSync(name)) {
           setTimeout(() => {
             fs.unlinkSync(name, (e) => {});
-          }, 2500);
+          }, 10000);
         }
         api
-          .sendMessage(msg.chat.id, `ERR: ${error}`)
+          .sendMessage(msg.chat.id, `ERR [Somewhere]: ${error}`)
           .then((r) => {
             setTimeout(() => {
               api.deleteMessage(r.chat.id, r.message_id);
