@@ -9,15 +9,33 @@ const logs = (_logs) => {
   fs.writeFileSync("logs.txt", current, "utf8");
 };
 
-const _music = async (api, msg, search, n = 1) => {
+const _music = async (api, msg, search, n = 1, _title = "") => {
   api
-    .sendMessage(msg.chat.id, `Trial search: ${n}`)
+    .sendMessage(
+      msg.chat.id,
+      `Trial search [${_title == "" ? search : _title}]: ${n}`,
+    )
     .then((r) => {
       setTimeout(() => {
         api.deleteMessage(r.chat.id, r.message_id);
       }, 2500);
     })
     .catch((e) => {});
+  if (n <= 1) {
+    api
+      .deleteMessage(msg.chat.id, msg.message_id)
+      .then((r) => {
+        console.log(`INFO: ${r}`);
+        logs(`INFO: ${r}`);
+      })
+      .catch((e) => {
+        logs(`ERR: ${e}`);
+        setTimeout(() => {
+          api.sendMessage(msg.chat.id, JSON.stringify(e));
+        }, 2500);
+      });
+  }
+
   try {
     const yt = await Innertube.create({
       cache: new UniversalCache(false),
@@ -56,19 +74,6 @@ const _music = async (api, msg, search, n = 1) => {
     }
 
     api
-      .deleteMessage(msg.chat.id, msg.message_id)
-      .then((r) => {
-        console.log(`INFO: ${r}`);
-        logs(`INFO: ${r}`);
-      })
-      .catch((e) => {
-        logs(`ERR: ${e}`);
-        setTimeout(() => {
-          api.sendMessage(msg.chat.id, JSON.stringify(e));
-        }, 2500);
-      });
-
-    api
       .sendMessage(msg.chat.id, `Found [INFO]: ${details.title}`)
       .then((r) => {
         setTimeout(() => {
@@ -98,7 +103,7 @@ const _music = async (api, msg, search, n = 1) => {
         if (fs.existsSync(name)) {
           setTimeout(() => {
             fs.unlinkSync(name, (e) => {});
-            _music(api, msg, search, n + 1);
+            _music(api, msg, search, n + 1, details.title);
           }, 10000);
         }
         api
