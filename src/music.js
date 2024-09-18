@@ -81,47 +81,60 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
         }, 5000);
       })
       .catch((e) => {});
-
-    api
-      .sendAudio(msg.chat.id, fs.createReadStream(name), {}, {})
-      .then((r) => {
-        console.log(`INFO: ${JSON.stringify(r)}`);
-        logs(`INFO: ${JSON.stringify(r)}`);
-        console.log("Sent");
-        if (fs.existsSync(name)) {
+    const send_now = (sender = 1) => {
+      api
+        .sendMessage(msg.chat.id, `Audio [INFO]: ${sender}`)
+        .then((r) => {
           setTimeout(() => {
-            if (fs.existsSync(name)) {
-              fs.unlinkSync(name, (e) => {});
-            }
-          }, 10000);
-        }
-      })
-      .catch((error) => {
-        if (error) {
-          console.log(`ERR [Send Audio]: ${JSON.stringify(error)}`);
-        }
-        if (fs.existsSync(name)) {
-          setTimeout(() => {
-            fs.unlinkSync(name, (e) => {});
-            _music(api, msg, search, n + 1, details.title);
-          }, 10000);
-        }
-        api
-          .sendMessage(msg.chat.id, `ERR [Somewhere]: ${error}`)
-          .then((r) => {
-            setTimeout(() => {
-              api.deleteMessage(r.chat.id, r.message_id);
-            }, 5000);
-          })
-          .catch((e) => {});
-        logs(`ERR: ${error}`);
-      });
+            api.deleteMessage(r.chat.id, r.message_id);
+          }, 1500);
+          api
+            .sendAudio(msg.chat.id, fs.createReadStream(name), {}, {})
+            .then((r) => {
+              console.log(`INFO: ${JSON.stringify(r)}`);
+              logs(`INFO: ${JSON.stringify(r)}`);
+              console.log("Sent");
+              if (fs.existsSync(name)) {
+                setTimeout(() => {
+                  if (fs.existsSync(name)) {
+                    fs.unlinkSync(name, (e) => {});
+                  }
+                }, 10000);
+              }
+            })
+            .catch((error) => {
+              if (error) {
+                console.log(`ERR [Send Audio]: ${JSON.stringify(error)}`);
+                send_now(sender + 1);
+              }
+              // if (fs.existsSync(name)) {
+              //   setTimeout(() => {
+              //     fs.unlinkSync(name, (e) => {});
+              //     _music(api, msg, search, n + 1, details.title);
+              //   }, 10000);
+              // }
+              api
+                .sendMessage(msg.chat.id, `ERR [Somewhere]: ${error}`)
+                .then((r) => {
+                  setTimeout(() => {
+                    api.deleteMessage(r.chat.id, r.message_id);
+                  }, 5000);
+                })
+                .catch((e) => {});
+              logs(`ERR: ${error}`);
+            });
+        })
+        .catch((e) => {
+          send_now(sender);
+        });
+    };
 
-    setTimeout(() => {
-      if (fs.existsSync(name)) {
-        fs.unlinkSync(name, (e) => {});
-      }
-    }, 60000);
+    send_now();
+    // setTimeout(() => {
+    //   if (fs.existsSync(name)) {
+    //     fs.unlinkSync(name, (e) => {});
+    //   }
+    // }, 60000);
   } catch (error) {
     logs(`ERR: ${error}`);
     api
