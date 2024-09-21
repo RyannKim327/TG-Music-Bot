@@ -42,6 +42,15 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
       generate_session_locally: true,
     });
 
+    if (
+      (search.includes("http") ||
+        search.includes("youtube.com") ||
+        search.includes("youtu.be")) &&
+      search.includes("&")
+    ) {
+      search = search.split("&")[0];
+    }
+
     const s = await yt.music.search(search, {
       type: "video",
     });
@@ -49,6 +58,11 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
     const info = await s.contents;
     let i = info[0];
     let j = 0;
+
+    while (!i.type) {
+      i = info[j];
+      j++;
+    }
 
     while (i.type != "MusicShelf") {
       j++;
