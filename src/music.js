@@ -59,7 +59,7 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
     let i = info[0];
     let j = 0;
 
-    while (!i.type) {
+    while (!i) {
       i = info[j];
       j++;
     }
@@ -80,7 +80,7 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
       client: "YTMUSIC",
     });
 
-    const name = `${__dirname}/../temp/${details.title.replace(/([\s\W]+)/gi, "_")}_${details.authors[0].name.replace(/([\s\W]+)/gi, "_")}.mp3`;
+    const name = `${__dirname}/../temp/${details.title.replace(/\//gi, "_")} - ${details.authors[0].name.replace(/\//gi, "_")}.mp3`;
     const file = fs.createWriteStream(name);
 
     for await (const chunk of Utils.streamToIterable(stream)) {
@@ -95,7 +95,25 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
         }, 5000);
       })
       .catch((e) => {});
+
     const send_now = (sender = 1) => {
+      if (sender > 25) {
+        api
+          .sendMessage(
+            msg.chat.id,
+            "The bot exceed the limit, so that the system automatically terminates the process.",
+          )
+          .then((r) => {
+            setTimeout(() => {
+              api.deleteMessage(r.chat.id, r.message_id);
+            }, 2500);
+          })
+          .catch((e) => {});
+        if (fs.existsSync(name)) {
+          fs.unlinkSync(name, (e) => {});
+        }
+        return;
+      }
       api
         .sendMessage(msg.chat.id, `Audio [INFO]: ${sender}`)
         .then((r) => {
@@ -139,7 +157,7 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
             });
         })
         .catch((e) => {
-          send_now(sender);
+          send_now(sender + 1);
         });
     };
 
