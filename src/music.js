@@ -2,11 +2,13 @@ const fs = require("fs");
 const { Innertube, UniversalCache, Utils } = require("youtubei.js");
 
 const logs = (_logs) => {
-  let current = fs.readFileSync("logs.txt", "utf8");
-  const t = new Date();
-  const time = `${t.getHours()}:${t.getMinutes()}`;
-  current += `[${time}] ${_logs}\n`;
-  fs.writeFileSync("logs.txt", current, "utf8");
+  if (false) {
+    let current = fs.readFileSync("logs.txt", "utf8");
+    const t = new Date();
+    const time = `${t.getHours()}:${t.getMinutes()}`;
+    current += `[${time}] ${_logs}\n`;
+    fs.writeFileSync("logs.txt", current, "utf8");
+  }
 };
 
 const _music = async (api, msg, search, n = 1, _title = "") => {
