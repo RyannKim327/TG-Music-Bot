@@ -12,6 +12,7 @@ const logs = (_logs) => {
 };
 
 const _music = async (api, msg, search, n = 1, _title = "") => {
+  process.env["NTBA_FIX_350"] = 1;
   api
     .sendMessage(
       msg.chat.id,
@@ -108,7 +109,7 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
           .then((r) => {
             setTimeout(() => {
               api.deleteMessage(r.chat.id, r.message_id);
-            }, 2500);
+            }, 3000);
           })
           .catch((e) => {});
         if (fs.existsSync(name)) {
@@ -139,20 +140,14 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
             .catch((error) => {
               if (error) {
                 console.log(`ERR [Send Audio]: ${JSON.stringify(error)}`);
-                send_now(sender + 1);
               }
-              // if (fs.existsSync(name)) {
-              //   setTimeout(() => {
-              //     fs.unlinkSync(name, (e) => {});
-              //     _music(api, msg, search, n + 1, details.title);
-              //   }, 10000);
-              // }
               api
-                .sendMessage(msg.chat.id, `ERR [Somewhere]: ${error}`)
+                .sendMessage(msg.chat.id, `ERR [Somewhere]: ${error.message}`)
                 .then((r) => {
                   setTimeout(() => {
                     api.deleteMessage(r.chat.id, r.message_id);
-                  }, 5000);
+                    send_now(sender + 1);
+                  }, 2500);
                 })
                 .catch((e) => {});
               logs(`ERR: ${error}`);
@@ -162,13 +157,7 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
           send_now(sender + 1);
         });
     };
-
     send_now();
-    // setTimeout(() => {
-    //   if (fs.existsSync(name)) {
-    //     fs.unlinkSync(name, (e) => {});
-    //   }
-    // }, 60000);
   } catch (error) {
     logs(`ERR: ${error}`);
     api
@@ -181,8 +170,6 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
       .catch((e) => {
         console.error(`ERR: ${JSON.stringify(e)}`);
       });
-    // _music(api, msg, search, n + 1);
-    // await api.deleteMessage(msg.chat.id, msg.message_id);
   }
 };
 
