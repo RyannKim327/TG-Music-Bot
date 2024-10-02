@@ -31,21 +31,28 @@ const start = async () => {
         api
           .sendMessage(
             msg.chat.id,
-            "Greetings, I am VibeSync, your telegram bot music (based on youtube music). If you want to get started, kindly chat your music you want to look for.",
+            "Greetings, I am AmogusBot, your telegram bot music (based on youtube music). If you want to get started, kindly chat your music you want to look for.",
           )
           .then((r) => {
             setTimeout(() => {
               api.deleteMessage(r.chat.id, r.message_id);
               api.deleteMessage(msg.chat.id, msg.message_id);
               console.log(`LOG: ${JSON.stringify(r)}`);
-            }, 10000);
+            }, 60000);
           })
           .catch((e) => {});
       } else {
         if (match[1]) {
           music(api, msg, match[0]);
         } else {
-          api.sendMessage(msg.chat.id, "Invalid message, please try again");
+          api
+            .sendMessage(msg.chat.id, "Invalid message, please try again")
+            .then((r) => {
+              setTimeout(() => {
+                api.deleteMessage(r.chat.id, r.message_id);
+              });
+            })
+            .catch((e) => {});
         }
       }
     });
