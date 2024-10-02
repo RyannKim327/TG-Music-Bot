@@ -146,6 +146,8 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
                 .then((r) => {
                   setTimeout(() => {
                     api.deleteMessage(r.chat.id, r.message_id);
+                    if (error.message.includes("413 Request Entity Too Large"))
+                      return;
                     send_now(sender + 1);
                   }, 2500);
                 })
