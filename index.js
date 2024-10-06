@@ -28,21 +28,23 @@ const start = async () => {
 
     api.onText(/([\w\W]+)/gi, (msg, match) => {
       if (match[0].startsWith("/start")) {
+        console.log(`KIM: ${JSON.stringify(msg)}`);
+        api.deleteMessage(msg.chat.id, msg.message_id);
         api
           .sendMessage(
             msg.chat.id,
-            "Greetings, I am AmogusBot, your telegram bot music (based on youtube music). If you want to get started, kindly chat your music you want to look for.",
+            "Greetings, I am ඞ, your telegram bot music (based on youtube music). If you want to get started, kindly chat your music you want to look for.",
           )
           .then((r) => {
             setTimeout(() => {
               api.deleteMessage(r.chat.id, r.message_id);
-              api.deleteMessage(msg.chat.id, msg.message_id);
               console.log(`LOG: ${JSON.stringify(r)}`);
             }, 60000);
           })
           .catch((e) => {});
       } else {
         if (match[1]) {
+          console.log(`KIMMY: ${JSON.stringify(msg)}`);
           music(api, msg, match[0]);
         } else {
           api
