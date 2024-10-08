@@ -24,6 +24,7 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
       }, 2500);
     })
     .catch((e) => {});
+
   if (n <= 1) {
     api
       .deleteMessage(msg.chat.id, msg.message_id)
@@ -54,6 +55,18 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
       search = search.split("&")[0];
     }
 
+    if (msg.link_preview_options.url) {
+      search = msg.link_preview_options.url;
+      if (
+        (search.includes("http") ||
+          search.includes("youtube.com") ||
+          search.includes("youtu.be")) &&
+        search.includes("&")
+      ) {
+        search = search.split("&")[0];
+      }
+    }
+
     const s = await yt.music.search(search, {
       type: "video",
     });
@@ -75,31 +88,30 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
     const details = i.contents[0];
 
     console.log(`Found [INFO]: ${details.id}`);
+    const send_now = async (sender = 1) => {
+      const stream = await yt.download(`${details.id}`, {
+        type: "audio",
+        quality: "bestefficiency",
+        format: "mp4",
+        client: "YTMUSIC",
+      });
 
-    const stream = await yt.download(`${details.id}`, {
-      type: "audio",
-      quality: "bestefficiency",
-      format: "mp4",
-      client: "YTMUSIC",
-    });
+      const name = `${__dirname}/../temp/${details.title.replace(/\//gi, "_")} - ${details.authors[0].name.replace(/\//gi, "_")}.mp3`;
+      const file = fs.createWriteStream(name);
 
-    const name = `${__dirname}/../temp/${details.title.replace(/\//gi, "_")} - ${details.authors[0].name.replace(/\//gi, "_")}.mp3`;
-    const file = fs.createWriteStream(name);
+      for await (const chunk of Utils.streamToIterable(stream)) {
+        file.write(chunk);
+      }
 
-    for await (const chunk of Utils.streamToIterable(stream)) {
-      file.write(chunk);
-    }
+      api
+        .sendMessage(msg.chat.id, `Found [INFO]: ${details.title}`)
+        .then((r) => {
+          setTimeout(() => {
+            api.deleteMessage(r.chat.id, r.message_id);
+          }, 5000);
+        })
+        .catch((e) => {});
 
-    api
-      .sendMessage(msg.chat.id, `Found [INFO]: ${details.title}`)
-      .then((r) => {
-        setTimeout(() => {
-          api.deleteMessage(r.chat.id, r.message_id);
-        }, 5000);
-      })
-      .catch((e) => {});
-
-    const send_now = (sender = 1) => {
       if (sender > 25) {
         api
           .sendMessage(

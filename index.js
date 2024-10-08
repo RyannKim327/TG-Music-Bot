@@ -33,13 +33,13 @@ const start = async () => {
         api
           .sendMessage(
             msg.chat.id,
-            "Greetings, I am ඞ, your telegram bot music (based on youtube music). If you want to get started, kindly chat your music you want to look for.",
+            "Greetings, I am ඞ, your telegram bot music (based on youtube music). If you want to get started, kindly message back your music you want to look for its either title or link. If you want to grab a music easily from Youtube, you may click on share from youtube, look for telegram or telegram x and look for my profile.\n\nThis message will automatically deleted after 2 minutes.\n\n- Developed by MPOP Reverse II",
           )
           .then((r) => {
             setTimeout(() => {
               api.deleteMessage(r.chat.id, r.message_id);
               console.log(`LOG: ${JSON.stringify(r)}`);
-            }, 60000);
+            }, 120000);
           })
           .catch((e) => {});
       } else {
