@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "axios": "^1.6.8",
+    "dotenv": "^16.4.5",
     "fs": "^0.0.1-security",
     "https": "^1.0.0",
     "node-telegram-bot-api": "^0.66.0",
@@ -11,7 +12,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index",
+    "start": "nodemon index --env-file=.env",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

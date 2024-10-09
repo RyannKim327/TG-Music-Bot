@@ -1,11 +1,16 @@
 const tg = require("node-telegram-bot-api");
 const fs = require("fs");
+require("dotenv").config();
 
 const music = require("./src/music");
 
-const token = "7363842676:AAHMYrc-QqcBoIYa_1TTX8_YMuFpkqVW-2g";
+const token = process.env.TOKEN;
 
 const start = async () => {
+  if (!token) {
+    return console.error(`TOKEN [ERR]: Token not found`);
+  }
+
   console.log("+-----------------------------------------+");
   console.log("|      Welcome to Telegram Music Bot      |");
   console.log("|     Developed by Ryann Kim Sesgundo     |");
