@@ -29,6 +29,13 @@ npm install fs
 ```
 
 ---
+### ENV
+> Here's the sample configuration for `.env` file
+```.env
+TOKEN=SAMPLETOKEN:FROMBOTFATHER
+```
+
+---
 ### Notes
 > This program is intended just to save music into your devices, the program was free thou, so if you want to host it, you may look for some web hosting
 online related to nodejs. You may also install all the packages once you clone this project using `npm install` and it will automatically install all
