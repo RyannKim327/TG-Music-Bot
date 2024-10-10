@@ -55,7 +55,7 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
       search = search.split("&")[0];
     }
 
-    if (msg.link_preview_options.url) {
+    if (msg.link_preview_options) {
       search = msg.link_preview_options.url;
       if (
         (search.includes("http") ||
