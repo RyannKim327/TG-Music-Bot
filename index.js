@@ -3,6 +3,8 @@ const fs = require("fs");
 require("dotenv").config();
 
 const music = require("./src/music");
+const playlist = require("./src/playlists");
+const playlists = require("./src/playlists");
 
 const token = process.env.TOKEN;
 
@@ -47,6 +49,10 @@ const start = async () => {
             }, 120000);
           })
           .catch((e) => {});
+      } else if (match[0].startsWith("/playlist")) {
+        const s = match[1];
+        console.log("pl");
+        playlists(api, msg, s.substring("/playlist ".length));
       } else {
         if (match[1]) {
           console.log(`KIMMY: ${JSON.stringify(msg)}`);
