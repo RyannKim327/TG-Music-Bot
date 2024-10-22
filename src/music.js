@@ -1,6 +1,9 @@
 const fs = require("fs");
 const { Innertube, UniversalCache, Utils } = require("youtubei.js");
 
+const limit = 10
+let isLink = false
+
 const logs = (_logs) => {
   if (false) {
     let current = fs.readFileSync("logs.txt", "utf8");
@@ -46,6 +49,10 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
       generate_session_locally: true,
     });
 
+    if (msg.link_preview_options) {
+      search = msg.link_preview_options.url;
+    }
+
     if (
       (search.includes("http") ||
         search.includes("youtube.com") ||
@@ -55,41 +62,29 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
       search = search.split("&")[0];
     }
 
-    if (msg.link_preview_options) {
-      search = msg.link_preview_options.url;
-      if (
-        (search.includes("http") ||
-          search.includes("youtube.com") ||
-          search.includes("youtu.be")) &&
-        search.includes("&")
-      ) {
-        search = search.split("&")[0];
-      }
-    }
-
-    const s = await yt.music.search(search, {
-      type: "video",
-    });
-
-    const info = await s.contents;
-    let i = info[0];
-    let j = 0;
-
-    while (!i) {
-      i = info[j];
-      j++;
-    }
-
-    while (i.type != "MusicShelf") {
-      j++;
-      i = info[j];
-    }
-
-    const details = i.contents[0];
-
-    console.log(`Found [INFO]: ${details.id}`);
     const send_now = async (sender = 1) => {
-      const stream = await yt.download(`${details.id}`, {
+      const s = await yt.music.search(search, {
+        type: "video",
+      });
+
+      const info = await s.contents;
+      let i = info[0];
+      let j = 0;
+
+      while (!i) {
+        i = info[j];
+        j++;
+      }
+
+      while (i.type != "MusicShelf") {
+        j++;
+        i = info[j];
+      }
+
+      const details = i.contents[0];
+
+      console.log(`Found [INFO]: ${details.id}`);
+      const stream = await yt.download(`${isLink ? search : details.id}`, {
         type: "audio",
         quality: "bestefficiency",
         format: "mp4",
@@ -112,7 +107,7 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
         })
         .catch((e) => {});
 
-      if (sender > 25) {
+      if (sender > limit) {
         api
           .sendMessage(
             msg.chat.id,
@@ -138,7 +133,7 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
           api
             .sendAudio(msg.chat.id, fs.createReadStream(name), {}, {})
             .then((r) => {
-              console.log(`Audio [INFO]: ${JSON.stringify(r)}`);
+              console.log(`Audio [INFO]: Done`);
               logs(`INFO: ${JSON.stringify(r)}`);
               console.log("Sent");
               if (fs.existsSync(name)) {
