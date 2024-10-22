@@ -29,11 +29,11 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
     api
       .deleteMessage(msg.chat.id, msg.message_id)
       .then((r) => {
-        console.log(`INFO: ${r}`);
+        console.log(`Delete Message [INFO]: ${r}`);
         logs(`INFO: ${r}`);
       })
       .catch((e) => {
-        logs(`ERR: ${e}`);
+        logs(`Delete Message [ERR]: ${e}`);
         setTimeout(() => {
           api.sendMessage(msg.chat.id, JSON.stringify(e));
         }, 2500);
@@ -138,7 +138,7 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
           api
             .sendAudio(msg.chat.id, fs.createReadStream(name), {}, {})
             .then((r) => {
-              console.log(`INFO: ${JSON.stringify(r)}`);
+              console.log(`Audio [INFO]: ${JSON.stringify(r)}`);
               logs(`INFO: ${JSON.stringify(r)}`);
               console.log("Sent");
               if (fs.existsSync(name)) {
@@ -175,14 +175,14 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
   } catch (error) {
     logs(`ERR: ${error}`);
     api
-      .sendMessage(msg.chat.id, `ERR: ${error}`)
+      .sendMessage(msg.chat.id, `Audio Catch [ERR]: ${error}`)
       .then((r) => {
         setTimeout(() => {
           api.deleteMessage(r.chat.id, r.message_id);
         }, 5000);
       })
       .catch((e) => {
-        console.error(`ERR: ${JSON.stringify(e)}`);
+        console.error(`ERR: ${e.message}`);
       });
   }
 };
