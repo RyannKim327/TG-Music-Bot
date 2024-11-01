@@ -3,6 +3,7 @@ const fs = require("fs");
 require("dotenv").config();
 
 const music = require("./src/music");
+const fb = require("./src/fbmusic");
 const playlist = require("./src/playlists");
 const playlists = require("./src/playlists");
 
@@ -51,6 +52,9 @@ const start = async () => {
             }, 120000);
           })
           .catch((e) => {});
+      } else if (match[0].startsWith("/fbmusic ")) {
+        const s = match[1];
+        fb(api, msg, s.substring("/fbmusic ".length));
       } else if (match[0].startsWith("/playlist")) {
         const s = match[1];
         console.log("pl");

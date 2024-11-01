@@ -1,9 +1,6 @@
 const fs = require("fs");
 const { Innertube, UniversalCache, Utils } = require("youtubei.js");
 
-const limit = 10
-let isLink = false
-
 const logs = (_logs) => {
   if (false) {
     let current = fs.readFileSync("logs.txt", "utf8");
@@ -32,11 +29,11 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
     api
       .deleteMessage(msg.chat.id, msg.message_id)
       .then((r) => {
-        console.log(`Delete Message [INFO]: ${r}`);
+        console.log(`INFO: ${r}`);
         logs(`INFO: ${r}`);
       })
       .catch((e) => {
-        logs(`Delete Message [ERR]: ${e}`);
+        logs(`ERR: ${e}`);
         setTimeout(() => {
           api.sendMessage(msg.chat.id, JSON.stringify(e));
         }, 2500);
@@ -49,10 +46,6 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
       generate_session_locally: true,
     });
 
-    if (msg.link_preview_options) {
-      search = msg.link_preview_options.url;
-    }
-
     if (
       (search.includes("http") ||
         search.includes("youtube.com") ||
@@ -62,26 +55,37 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
       search = search.split("&")[0];
     }
 
-    const send_now = async (sender = 1) => {
-      const s = await yt.music.search(search, {
-        type: "video",
-      });
+    if (msg.link_preview_options) {
+      search = msg.link_preview_options.url;
+      if (
+        (search.includes("http") ||
+          search.includes("youtube.com") ||
+          search.includes("youtu.be")) &&
+        search.includes("&")
+      ) {
+        search = search.split("&")[0];
+      }
+    }
 
-      const info = await s.contents;
-      let i = info[0];
-      let j = 0;
+    const s = await yt.music.search(search, {
+      type: "video",
+    });
+
+    const info = await s.contents;
+    let i = info[0];
+    let j = 0;
 
     while (!i && j < info.length) {
       i = info[j];
       j++;
     }
 
-      while (i.type != "MusicShelf") {
-        j++;
-        i = info[j];
-      }
+    while (i.type != "MusicShelf") {
+      j++;
+      i = info[j];
+    }
 
-      const details = i.contents[0];
+    const details = i.contents[0];
 
     api
       .sendMessage(msg.chat.id, `Music [FOUND]: ${details.title}`)
@@ -116,7 +120,7 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
         })
         .catch((e) => {});
 
-      if (sender > limit) {
+      if (sender > 25) {
         api
           .sendMessage(
             msg.chat.id,
@@ -177,14 +181,14 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
   } catch (error) {
     logs(`ERR: ${error}`);
     api
-      .sendMessage(msg.chat.id, `Audio Catch [ERR]: ${error}`)
+      .sendMessage(msg.chat.id, `ERR: ${error}`)
       .then((r) => {
         setTimeout(() => {
           api.deleteMessage(r.chat.id, r.message_id);
         }, 5000);
       })
       .catch((e) => {
-        console.error(`ERR: ${e.message}`);
+        console.error(`ERR: ${JSON.stringify(e)}`);
       });
   }
 };
