@@ -71,10 +71,10 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
       let i = info[0];
       let j = 0;
 
-      while (!i) {
-        i = info[j];
-        j++;
-      }
+    while (!i && j < info.length) {
+      i = info[j];
+      j++;
+    }
 
       while (i.type != "MusicShelf") {
         j++;
@@ -83,8 +83,17 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
 
       const details = i.contents[0];
 
-      console.log(`Found [INFO]: ${details.id}`);
-      const stream = await yt.download(`${isLink ? search : details.id}`, {
+    api
+      .sendMessage(msg.chat.id, `Music [FOUND]: ${details.title}`)
+      .then((r) => {
+        setTimeout(() => {
+          api.deleteMessage(r.chat.id, r.message_id);
+        }, 3000);
+      })
+      .catch((e) => {});
+
+    const send_now = async (sender = 1) => {
+      const stream = await yt.download(`${details.id}`, {
         type: "audio",
         quality: "bestefficiency",
         format: "mp4",
@@ -133,9 +142,7 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
           api
             .sendAudio(msg.chat.id, fs.createReadStream(name), {}, {})
             .then((r) => {
-              console.log(`Audio [INFO]: Done`);
               logs(`INFO: ${JSON.stringify(r)}`);
-              console.log("Sent");
               if (fs.existsSync(name)) {
                 setTimeout(() => {
                   if (fs.existsSync(name)) {
