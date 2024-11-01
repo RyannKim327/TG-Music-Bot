@@ -6,13 +6,13 @@
     "https": "^1.0.0",
     "node-telegram-bot-api": "^0.66.0",
     "nodemon": "^3.1.4",
-    "youtubei.js": "^10.4.0"
+    "youtubei.js": "^11.0.1"
   },
   "name": "tg-music-bot",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index --env-file=.env",
+    "start": "nodemon index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
