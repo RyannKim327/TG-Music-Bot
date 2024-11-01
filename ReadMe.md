@@ -40,3 +40,10 @@ TOKEN=SAMPLETOKEN:FROMBOTFATHER
 > This program is intended just to save music into your devices, the program was free thou, so if you want to host it, you may look for some web hosting
 online related to nodejs. You may also install all the packages once you clone this project using `npm install` and it will automatically install all
 required programs. For more concerns, kindly give us feedback on [facebook](https://facebook.com/MPOP.ph) or join to our [TELEGRAM GROUP](https://t.me/amogusmusicfeed).
+
+---
+### Credits
+1. Salvador
+2. Mark Kevin Manalo
+3. Earl Shine Sawir
+4. John Paul Caigas
