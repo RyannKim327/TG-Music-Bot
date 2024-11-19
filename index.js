@@ -52,6 +52,14 @@ const start = async () => {
             }, 120000);
           })
           .catch((e) => {});
+      } else if (match[0].startsWith("/delete")) {
+        if (msg.reply_to_message) {
+          api.deleteMessage(
+            msg.reply_to_message.chat.id,
+            msg.reply_to_message.message_id,
+          );
+          api.deleteMessage(msg.chat.id, msg.message_id);
+        }
       } else if (match[0].startsWith("/fbmusic ")) {
         const s = match[1];
         fb(api, msg, s.substring("/fbmusic ".length));

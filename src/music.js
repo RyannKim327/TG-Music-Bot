@@ -104,7 +104,7 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
         client: "YTMUSIC",
       });
 
-      const name = `${__dirname}/../temp/${details.title.replace(/\//gi, "_")} - ${details.authors[0].name.replace(/\//gi, "_")}.mp3`;
+      const name = `${__dirname}/../temp/${details.title.replace(/\W/gi, "_")} - ${details.authors[0].name.replace(/W/gi, "_")}.mp3`;
       const file = fs.createWriteStream(name);
 
       for await (const chunk of Utils.streamToIterable(stream)) {
