@@ -38,7 +38,7 @@ const start = async () => {
 
     api.onText(/([\w\W]+)/gi, (msg, match) => {
       if (match[0].startsWith("/start")) {
-        console.log(`KIM: ${JSON.stringify(msg)}`);
+        // console.log(`KIM: ${JSON.stringify(msg)}`);
         api.deleteMessage(msg.chat.id, msg.message_id);
         api
           .sendMessage(
@@ -48,7 +48,7 @@ const start = async () => {
           .then((r) => {
             setTimeout(() => {
               api.deleteMessage(r.chat.id, r.message_id);
-              console.log(`LOG: ${JSON.stringify(r)}`);
+              // console.log(`LOG: ${JSON.stringify(r)}`);
             }, 120000);
           })
           .catch((e) => {});
