@@ -71,7 +71,11 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
       type: "video",
     });
 
-    const info = await s.contents;
+    if (!s) {
+      return console.error(`ERR: Not found`);
+    }
+
+    const info = s.contents;
     let i = info[0];
     let j = 0;
 
@@ -97,12 +101,19 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
       .catch((e) => {});
 
     const send_now = async (sender = 1) => {
+      if (!details.id) {
+        return console.error("Error");
+      }
       const stream = await yt.download(`${details.id}`, {
         type: "audio",
         quality: "bestefficiency",
         format: "mp4",
         client: "YTMUSIC",
       });
+
+      if (!stream) {
+        return console.error("Error");
+      }
 
       const name = `${__dirname}/../temp/${details.title.replace(/\W/gi, "_")} - ${details.authors[0].name.replace(/W/gi, "_")}.mp3`;
       const file = fs.createWriteStream(name);
