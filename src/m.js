@@ -15,7 +15,7 @@ module.exports = async (api, msg, search) => {
     })
     .catch((e) => {});
 
-  const filename = `${__dirname}/../temp/${data.title}.mp3`;
+  const filename = `${__dirname}/../temp/${data.title.replace(/\W/gi, "_")}.mp3`;
   const file = fs.createWriteStream(filename);
   http.get(data.mp3Link, (res) => {
     res.pipe(file);
