@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { Innertube, UniversalCache, Utils } = require("youtubei.js");
+const { Innertube, UniversalCache, Utils, ClientType } = require("youtubei.js");
 
 const logs = (_logs) => {
   if (false) {
@@ -41,9 +41,14 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
   }
 
   try {
+
     const yt = await Innertube.create({
       cache: new UniversalCache(false),
-      generate_session_locally: true,
+      generate_session_locally: false,
+      cookie: fs.readFileSync("b.json", "utf-8"),
+      client_type: ClientType.WEB_EMBEDDED,
+      enable_session_cache: true,
+      account_index: 0
     });
 
     if (
@@ -69,6 +74,7 @@ const _music = async (api, msg, search, n = 1, _title = "") => {
 
     const s = await yt.music.search(search, {
       type: "video",
+      client: 'YTMUSIC'
     });
 
     if (!s) {
