@@ -5,8 +5,7 @@
     "fs": "^0.0.1-security",
     "https": "^1.0.0",
     "node-telegram-bot-api": "^0.66.0",
-    "nodemon": "^3.1.4",
-    "youtubei.js": "^12.2.0"
+    "nodemon": "^3.1.4"
   },
   "name": "tg-music-bot",
   "version": "1.0.0",

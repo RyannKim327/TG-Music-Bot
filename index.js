@@ -2,10 +2,8 @@ const tg = require("node-telegram-bot-api");
 const fs = require("fs");
 require("dotenv").config();
 
-const music = require("./src/m");
+const music = require("./src/music");
 const fb = require("./src/fbmusic");
-const playlist = require("./src/playlists");
-const playlists = require("./src/playlists");
 
 const token = process.env.TOKEN;
 
@@ -63,15 +61,12 @@ const start = async () => {
       } else if (match[0].startsWith("/fbmusic ")) {
         const s = match[1];
         fb(api, msg, s.substring("/fbmusic ".length));
-      } else if (match[0].startsWith("/playlist")) {
-        const s = match[1];
-        console.log("pl");
-        playlists(api, msg, s.substring("/playlist ".length));
       } else {
         if (match[1]) {
-          console.log(`KIMMY: ${JSON.stringify(msg)}`);
-          api.deleteMessage(msg.chat.id, msg.message_id);
           music(api, msg, match[0]);
+          setTimeout(() => {
+            api.deleteMessage(msg.chat.id, msg.message_id);
+          }, 1000)
         } else {
           api
             .sendMessage(msg.chat.id, "Invalid message, please try again")
