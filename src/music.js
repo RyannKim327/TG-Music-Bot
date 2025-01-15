@@ -29,7 +29,7 @@ module.exports = async (api, msg, search) => {
         api
           .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
           .then((r) => {
-            console.log(`INFO: ${JSON.stringify(r)}`);
+            // console.log(`INFO: ${JSON.stringify(r)}`);
             if (fs.existsSync(filename)) {
               setTimeout(() => {
                 if (fs.existsSync(filename)) {
