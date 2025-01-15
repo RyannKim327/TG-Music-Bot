@@ -3,7 +3,7 @@ const fs = require("fs");
 const http = require("https");
 
 module.exports = async (api, msg, search) => {
-  api.sendMessage(msg.chat.is, "Please wait for a moment...").then(r => {
+  api.sendMessage(msg.chat.id, "Please wait for a moment...").then(r => {
     setTimeout(() => {
       api.deleteMessage(r.chat.id, r.message_id)
     }, 2500)
