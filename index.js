@@ -1,11 +1,16 @@
 const tg = require("node-telegram-bot-api");
 const fs = require("fs");
+const express = require("express")
 require("dotenv").config();
 
 const music = require("./src/music");
 const fb = require("./src/fbmusic");
 
 const token = process.env.TOKEN;
+const url = "https://tg-music-bot-odo2.onrender.com/"
+
+const app = express()
+app.use(express.json())
 
 const start = async () => {
   if (!token) {
@@ -24,7 +29,16 @@ const start = async () => {
   try {
     const api = new tg(token);
 
-    await api.openWebHook()
+    await api.setWebHook(`${url}/bot${token}`)
+
+    app.post(`/bot${token}`, (req, res) => {
+      api.processUpdate(req.body)
+      res.sendStatus(200)
+    })
+
+    app.listen(3000, () => {
+      console.log("HIHI")
+    })
 
     if (fs.existsSync(directory)) {
       fs.rm(directory, { recursive: true }, (e) => {});
