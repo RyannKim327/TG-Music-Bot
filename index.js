@@ -24,6 +24,8 @@ const start = async () => {
   try {
     const api = new tg(token);
 
+    await api.openWebHook()
+
     if (fs.existsSync(directory)) {
       fs.rm(directory, { recursive: true }, (e) => {});
     }
