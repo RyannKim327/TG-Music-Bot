@@ -12,6 +12,10 @@ const url = "https://tg-music-bot-odo2.onrender.com/"
 const app = express()
 app.use(express.json())
 
+app.get("/", (req, res) => {
+  res.send("Currently working now")
+})
+
 const start = async () => {
   if (!token) {
     return console.error(`TOKEN [ERR]: Token not found`);
@@ -29,7 +33,7 @@ const start = async () => {
   try {
     const api = new tg(token);
 
-    await api.setWebHook(`${url}/bot${token}`)
+    api.setWebHook(`${url}/bot${token}`)
 
     app.post(`/bot${token}`, (req, res) => {
       api.processUpdate(req.body)
