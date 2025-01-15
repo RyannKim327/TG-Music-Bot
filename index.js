@@ -22,9 +22,7 @@ const start = async () => {
   const directory = `${__dirname}/temp`;
 
   try {
-    const api = new tg(token, {
-      polling: true,
-    });
+    const api = new tg(token);
 
     if (fs.existsSync(directory)) {
       fs.rm(directory, { recursive: true }, (e) => {});
