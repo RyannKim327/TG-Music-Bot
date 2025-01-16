@@ -21,7 +21,7 @@ module.exports = async (api, msg, search) => {
       })
       .catch((e) => {});
 
-    const filename = `${__dirname}/../temp/${data.title.replace(/\W/gi, "_")}.mp3`;
+    const filename = `${__dirname}/../temp/${data.title.replace(/\W/gi, " ").trim().replace(/\s/gi, "_")}.mp3`;
     const file = fs.createWriteStream(filename);
     http.get(data.downloadUrl, (res) => {
       res.pipe(file);
@@ -45,7 +45,7 @@ module.exports = async (api, msg, search) => {
     api.sendMessage(msg.chat.id, `Error [Music]: ${JSON.stringify(e, null, 2)}`).then(r => {
       setTimeout(() => {
         api.deleteMessage(r.chat.id, r.message_id)
-      }, 2500)
+      }, 5000)
     })
     console.error(`Error [Music]: ${e}`)
   }
