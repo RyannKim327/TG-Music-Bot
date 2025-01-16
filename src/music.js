@@ -4,20 +4,20 @@ const http = require("https");
 
 module.exports = async (api, msg, search) => {
   api.sendMessage(msg.chat.id, "Please wait for a moment...").then(r => {
-    setTimeout(() => {
-      api.deleteMessage(r.chat.id, r.message_id)
-    }, 2500)
-  }).catch(e => {})
+    // setTimeout(() => {
+      // api.deleteMessage(r.chat.id, r.message_id)
+    // }, 2500)
+  // }).catch(e => {})
   try{
     const { data } = await axios.get(
       `https://dlvc.vercel.app/yt-audio?search=${encodeURI(search)}`,
     );
     api
-      .sendMessage(msg.chat.id, `Trial search [${search}]`)
-      .then((r) => {
+      .editMessage(`Trial search [${search}]`, r.message_id)
+      .then((r1) => {
         setTimeout(() => {
-          api.deleteMessage(r.chat.id, r.message_id);
-        }, 2500);
+          api.deleteMessage(r1.chat.id, r1.message_id);
+        }, 5000);
       })
       .catch((e) => {});
 
@@ -42,11 +42,12 @@ module.exports = async (api, msg, search) => {
       });
     });
   }catch(e){
-    api.sendMessage(msg.chat.id, `Error [Music]: ${JSON.stringify(e, null, 2)}`).then(r => {
+    api.sendMessage(msg.chat.id, `Error [Music]: ${JSON.stringify(e, null, 2)}`).then(r1 => {
       setTimeout(() => {
-        api.deleteMessage(r.chat.id, r.message_id)
+        api.deleteMessage(r1.chat.id, r1.message_id)
       }, 5000)
     })
     console.error(`Error [Music]: ${e}`)
   }
+  }).catch(err => {})
 };
