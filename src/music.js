@@ -42,6 +42,11 @@ module.exports = async (api, msg, search) => {
       });
     });
   }catch(e){
+    api.sendMessage(msg.chat.id, `Error [Music]: ${JSON.stringify(e, null, 2)}`).then(r => {
+      setTimeout(() => {
+        api.deleteMessage(msg.chat.id, msg.message_id)
+      }, 2500)
+    })
     console.error(`Error [Music]: ${e}`)
   }
 };
