@@ -3,25 +3,25 @@ const fs = require("fs");
 const http = require("https");
 
 module.exports = async (api, msg, search) => {
-  api.sendMessage(msg.chat.id, "Please wait for a moment...").then(async (r) => {
-    // setTimeout(() => {
-      // api.deleteMessage(r.chat.id, r.message_id)
-    // }, 2500)
-  // }).catch(e => {})
+  api.sendMessage(msg.chat.id, "Please wait for a moment...").then(r => {
+    setTimeout(() => {
+      api.deleteMessage(r.chat.id, r.message_id)
+    }, 2500)
+  }).catch(e => {})
   try{
     const { data } = await axios.get(
       `https://dlvc.vercel.app/yt-audio?search=${encodeURI(search)}`,
     );
     api
-      .editMessage(`Trial search [${search}]`, r.message_id)
-      .then((r1) => {
+      .sendMessage(msg.chat.id, `Trial search [${search}]`)
+      .then((r) => {
         setTimeout(() => {
-          api.deleteMessage(r1.chat.id, r1.message_id);
-        }, 5000);
+          api.deleteMessage(r.chat.id, r.message_id);
+        }, 2500);
       })
       .catch((e) => {});
 
-    const filename = `${__dirname}/../temp/${data.title.replace(/\W/gi, " ").trim().replace(/\s/gi, "_")}.mp3`;
+    const filename = `${__dirname}/../temp/${data.title.replace(/\W/gi, " ").trim().replace(/ /, "_")}.mp3`;
     const file = fs.createWriteStream(filename);
     http.get(data.downloadUrl, (res) => {
       res.pipe(file);
@@ -42,12 +42,11 @@ module.exports = async (api, msg, search) => {
       });
     });
   }catch(e){
-    api.sendMessage(msg.chat.id, `Error [Music]: ${JSON.stringify(e, null, 2)}`).then(r1 => {
+    api.sendMessage(msg.chat.id, `Error [Music]: ${JSON.stringify(e, null, 2)}`).then(r => {
       setTimeout(() => {
-        api.deleteMessage(r1.chat.id, r1.message_id)
+        api.deleteMessage(r.chat.id, r.message_id)
       }, 5000)
     })
     console.error(`Error [Music]: ${e}`)
   }
-  }).catch(err => {})
 };
