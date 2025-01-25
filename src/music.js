@@ -15,7 +15,7 @@ module.exports = async (api, msg, search) => {
     let q = "?q=";
     const data = await axios
       .get(
-        `https://kaiz-apis.gleeze.com/api/ytsearch${q}${encodeURIComponent(result[1])}`,
+        `https://kaiz-apis.gleeze.com/api/ytsearch${q}${encodeURIComponent(search)}`,
       )
       .then((r) => {
         return r.data.items[0];
