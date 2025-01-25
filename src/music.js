@@ -53,6 +53,7 @@ module.exports = async (api, msg, search) => {
     .catch((error) => {
       return null;
     });
+  console.log(`==> ${JSON.stringify(newData, null, 2)} <==`);
   if (!data) {
     return api
       .sendMessage(msg.chat.id, `There's an error occured`)
