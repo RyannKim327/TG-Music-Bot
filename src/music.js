@@ -43,9 +43,10 @@ module.exports = async (api, msg, search) => {
       })
       .catch((e) => {});
   }
+  console.log(data);
   const newData = await axios
     .get(
-      `https://kaiz-ytmp4-downloader.vercel.app/ytmp4?url=${encodeURIComponent(data.url)}&quality=mp3`,
+      `https://kaiz-ytmp4-downloader.vercel.app/ytmp4?url=${encodeURI(data.url)}&quality=mp3`,
     )
     .then((res) => {
       return res.data;
@@ -54,7 +55,7 @@ module.exports = async (api, msg, search) => {
       return null;
     });
   console.log(`==> ${JSON.stringify(newData, null, 2)} <==`);
-  if (!data) {
+  if (!newData) {
     return api
       .sendMessage(msg.chat.id, `There's an error occured`)
       .then((r) => {
