@@ -52,6 +52,7 @@ module.exports = async (api, msg, search) => {
       return res.data;
     })
     .catch((error) => {
+      console.error(error);
       return null;
     });
   console.log(`==> ${JSON.stringify(newData, null, 2)} <==`);
