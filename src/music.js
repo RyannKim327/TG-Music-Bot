@@ -68,8 +68,10 @@ module.exports = async (api, msg, search) => {
           setTimeout(() => {
             api.deleteMessage(r.chat.id, r.message_id);
           }, 2500);
-          tries++;
-          retry();
+          if (tries <= 10) {
+            tries++;
+            retry();
+          }
         })
         .catch((e) => {});
     }
