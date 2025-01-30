@@ -4,11 +4,14 @@ const http = require("https");
 
 module.exports = async (api, msg, search) => {
   api
-    .sendMessage(msg.chat.id, `Now looking for ${search}.\nPlease wait ...`)
+    .sendMessage(
+      msg.chat.id,
+      `Now looking for ${search}.\n───────────────────── ୨୧ ─────────────────────\nPlease wait ...`,
+    )
     .then((r) => {
       setTimeout(() => {
         api.deleteMessage(r.chat.id, r.message_id);
-      }, 2500);
+      }, 5000);
     })
     .catch((e) => {});
   let q = "?q=";
@@ -34,7 +37,7 @@ module.exports = async (api, msg, search) => {
   }
 
   api
-    .sendMessage(msg.chat.id, `Song found[${data.title}]`)
+    .sendMessage(msg.chat.id, `Song found: [${data.title}]`)
     .then((r) => {
       setTimeout(() => {
         api.deleteMessage(r.chat.id, r.message_id);
