@@ -21,12 +21,12 @@ const start = async () => {
     return console.error(`TOKEN [ERR]: Token not found`);
   }
 
-  console.log("+-----------------------------------------+");
-  console.log("|                                         |");
-  console.log("|      Welcome to Telegram Music Bot      |");
-  console.log("|     Developed by Ryann Kim Sesgundo     |");
-  console.log("|                                         |");
-  console.log("+-----------------------------------------+");
+  console.log("╭―――――――――――――――――――――――――――――――――――――――――╮");
+  console.log("│                                         │");
+  console.log("│      Welcome to Telegram Music Bot      │");
+  console.log("│     Developed by Ryann Kim Sesgundo     │");
+  console.log("│                                         │");
+  console.log("╰―――――――――――――――――――――――――――――――――――――――――╯");
 
   const directory = `${__dirname}/temp`;
 
