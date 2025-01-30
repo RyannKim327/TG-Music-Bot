@@ -55,7 +55,10 @@ module.exports = async (api, msg, search) => {
     });
   if (!newData) {
     return api
-      .sendMessage(msg.chat.id, `There's an error occured. Please try again.`)
+      .sendMessage(
+        msg.chat.id,
+        `Failed to retrieve the download url. Please try again.`,
+      )
       .then((r) => {
         setTimeout(() => {
           api.deleteMessage(r.chat.id, r.message_id);
