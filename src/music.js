@@ -6,7 +6,7 @@ module.exports = async (api, msg, search) => {
   api
     .sendMessage(
       msg.chat.id,
-      `Now looking for ${search}.\n───────────────────── ୨୧ ─────────────────────\nPlease wait ...`,
+      `Now looking for ${search}.\n─────────── ୨୧ ───────────\nPlease wait ...`,
     )
     .then((r) => {
       setTimeout(() => {
