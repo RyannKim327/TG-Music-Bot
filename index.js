@@ -1,20 +1,20 @@
 const tg = require("node-telegram-bot-api");
 const fs = require("fs");
-const express = require("express")
+const express = require("express");
 require("dotenv").config();
 
 const music = require("./src/music");
 const fb = require("./src/fbmusic");
 
 const token = process.env.TOKEN;
-const url = "https://tg-music-bot-odo2.onrender.com"
+const url = "https://tg-music-bot-odo2.onrender.com";
 
-const app = express()
-app.use(express.json())
+const app = express();
+app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Currently working now")
-})
+  res.send("Currently working now");
+});
 
 const start = async () => {
   if (!token) {
@@ -33,16 +33,16 @@ const start = async () => {
   try {
     const api = new tg(token);
 
-    api.setWebHook(`${url}/bot${token}`)
+    api.setWebHook(`${url}/bot${token}`);
 
     app.post(`/bot${token}`, (req, res) => {
-      api.processUpdate(req.body)
-      res.sendStatus(200)
-    })
+      api.processUpdate(req.body);
+      res.sendStatus(200);
+    });
 
     app.listen(process.env.PORT || 3000, () => {
-      console.log("HIHI")
-    })
+      console.log("HIHI");
+    });
 
     if (fs.existsSync(directory)) {
       fs.rm(directory, { recursive: true }, (e) => {});
@@ -84,7 +84,7 @@ const start = async () => {
           music(api, msg, match[0]);
           setTimeout(() => {
             api.deleteMessage(msg.chat.id, msg.message_id);
-          }, 1000)
+          }, 1000);
         } else {
           api
             .sendMessage(msg.chat.id, "Invalid message, please try again")
