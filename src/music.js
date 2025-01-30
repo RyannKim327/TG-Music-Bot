@@ -45,48 +45,54 @@ module.exports = async (api, msg, search) => {
     })
     .catch((e) => {});
 
-  const newData = await axios
-    .get(
-      `https://kaiz-ytmp4-downloader.vercel.app/ytmp4?url=${encodeURI(data.url)}&quality=mp3`,
-    )
-    .then((res) => {
-      return res.data;
-    })
-    .catch((error) => {
-      console.error(error);
-      return null;
-    });
-  if (!newData) {
-    return api
-      .sendMessage(
-        msg.chat.id,
-        `Failed to retrieve the download url. Please try again.`,
+  let tries = 1;
+  const retry = async () => {
+    const newData = await axios
+      .get(
+        `https://kaiz-ytmp4-downloader.vercel.app/ytmp4?url=${encodeURI(data.url)}&quality=mp3`,
       )
-      .then((r) => {
-        setTimeout(() => {
-          api.deleteMessage(r.chat.id, r.message_id);
-        }, 2500);
+      .then((res) => {
+        return res.data;
       })
-      .catch((e) => {});
-  }
-  const filename = `${__dirname}/../temp/${data.title.replace(/\W/gi, " ").trim().replace(/\s/gi, "_")}.mp3`;
-  const file = fs.createWriteStream(filename);
-
-  http.get(newData.download_url, (res) => {
-    res.pipe(file);
-    file.on("finish", () => {
-      api
-        .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
+      .catch((error) => {
+        console.error(error);
+        return null;
+      });
+    if (!newData) {
+      return api
+        .sendMessage(
+          msg.chat.id,
+          `Failed to retrieve the download url. The system will automatically retry: [${tries}/10]`,
+        )
         .then((r) => {
-          if (fs.existsSync(filename)) {
-            setTimeout(() => {
-              if (fs.existsSync(filename)) {
-                fs.unlinkSync(filename, (e) => {});
-              }
-            }, 10000);
-          }
+          setTimeout(() => {
+            api.deleteMessage(r.chat.id, r.message_id);
+          }, 2500);
+          tries++;
+          retry();
         })
-        .catch((error) => {});
+        .catch((e) => {});
+    }
+    const filename = `${__dirname}/../temp/${data.title.replace(/\W/gi, " ").trim().replace(/\s/gi, "_")}.mp3`;
+    const file = fs.createWriteStream(filename);
+
+    http.get(newData.download_url, (res) => {
+      res.pipe(file);
+      file.on("finish", () => {
+        api
+          .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
+          .then((r) => {
+            if (fs.existsSync(filename)) {
+              setTimeout(() => {
+                if (fs.existsSync(filename)) {
+                  fs.unlinkSync(filename, (e) => {});
+                }
+              }, 10000);
+            }
+          })
+          .catch((error) => {});
+      });
     });
-  });
+  };
+  retry();
 };
