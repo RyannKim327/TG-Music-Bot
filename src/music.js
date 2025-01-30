@@ -70,7 +70,20 @@ module.exports = async (api, msg, search) => {
           }, 2500);
           if (tries <= 10) {
             tries++;
-            retry();
+            setTimeout(() => {
+              retry();
+            }, 1000);
+          } else {
+            api
+              .sendMessage(
+                msg.chat.id,
+                `The retry exceeds its limit, kindly retry later.`,
+              )
+              .then((r) => {
+                setTimeout(() => {
+                  api.deleteMessage(r.chat.id, r.message_id);
+                }, 2500);
+              });
           }
         })
         .catch((e) => {});
@@ -78,6 +91,14 @@ module.exports = async (api, msg, search) => {
     const filename = `${__dirname}/../temp/${data.title.replace(/\W/gi, " ").trim().replace(/\s/gi, "_")}.mp3`;
     const file = fs.createWriteStream(filename);
 
+    api
+      .sendMessage(msg.chat.id, `The audio file is now processing...`)
+      .then((r) => {
+        setTimeout(() => {
+          api.deleteMessage(r.chat.id, r.message_id);
+        }, 2500);
+      })
+      .catch((e) => {});
     http.get(newData.download_url, (res) => {
       res.pipe(file);
       file.on("finish", () => {
