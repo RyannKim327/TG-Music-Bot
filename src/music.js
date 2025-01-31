@@ -3,6 +3,9 @@ const fs = require("fs");
 const http = require("https");
 
 module.exports = async (api, msg, search) => {
+  if (!fs.existsSync(`${__dirname}/../temp/${msg.chat.id}`)) {
+    fs.mkdir(`${__dirname}/../temp/${msg.chat.id}`);
+  }
   api
     .sendMessage(
       msg.chat.id,
@@ -88,34 +91,32 @@ module.exports = async (api, msg, search) => {
         })
         .catch((e) => {});
     }
-    const filename = `${__dirname}/../temp/${data.title.replace(/\W/gi, " ").trim().replace(/\s/gi, "_")}.mp3`;
+    const filename = `${__dirname}/../temp/${msg.chat.id}/${data.title.replace(/\W/gi, " ").trim().replace(/\s/gi, "_")}.mp3`;
     const file = fs.createWriteStream(filename);
 
     api
       .sendMessage(msg.chat.id, `The audio file is now processing...`)
-      .then((r) => {
-        setTimeout(() => {
-          api.deleteMessage(r.chat.id, r.message_id);
-        }, 2500);
+      .then((rx) => {
+        http.get(newData.download_url, (res) => {
+          res.pipe(file);
+          file.on("finish", () => {
+            api
+              .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
+              .then((r) => {
+                if (fs.existsSync(filename)) {
+                  setTimeout(() => {
+                    if (fs.existsSync(filename)) {
+                      fs.unlinkSync(filename, (e) => {});
+                    }
+                  }, 10000);
+                }
+                api.deleteMessage(rx.chat.id, rx.message_id);
+              })
+              .catch((error) => {});
+          });
+        });
       })
       .catch((e) => {});
-    http.get(newData.download_url, (res) => {
-      res.pipe(file);
-      file.on("finish", () => {
-        api
-          .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
-          .then((r) => {
-            if (fs.existsSync(filename)) {
-              setTimeout(() => {
-                if (fs.existsSync(filename)) {
-                  fs.unlinkSync(filename, (e) => {});
-                }
-              }, 10000);
-            }
-          })
-          .catch((error) => {});
-      });
-    });
   };
   retry();
 };
