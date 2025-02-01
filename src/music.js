@@ -4,7 +4,7 @@ const http = require("https");
 
 module.exports = async (api, msg, search) => {
   if (!fs.existsSync(`${__dirname}/../temp/${msg.chat.id}`)) {
-    fs.mkdir(`${__dirname}/../temp/${msg.chat.id}`);
+    fs.mkdirSync(`${__dirname}/../temp/${msg.chat.id}`);
   }
   api
     .sendMessage(
