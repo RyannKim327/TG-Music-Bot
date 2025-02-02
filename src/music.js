@@ -65,7 +65,7 @@ module.exports = async (api, msg, search) => {
       return api
         .sendMessage(
           msg.chat.id,
-          `Failed to retrieve the download url. The system will automatically retry: [${tries}/10]`,
+          `Failed to retrieve the download url. The system will automatically retry: [${tries}/10]\nTitle: [${data.title}]`,
         )
         .then((r) => {
           setTimeout(() => {
@@ -95,7 +95,10 @@ module.exports = async (api, msg, search) => {
     const file = fs.createWriteStream(filename);
 
     api
-      .sendMessage(msg.chat.id, `The audio file is now processing...`)
+      .sendMessage(
+        msg.chat.id,
+        `The audio file is now processing [${data.title}]`,
+      )
       .then((rx) => {
         http.get(newData.download_url, (res) => {
           res.pipe(file);
