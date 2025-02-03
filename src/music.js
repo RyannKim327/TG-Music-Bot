@@ -9,7 +9,7 @@ module.exports = async (api, msg, search) => {
   api
     .sendMessage(
       msg.chat.id,
-      `Now looking for ${search}.\n─────────── ୨୧ ───────────\nPlease wait ...`,
+      `Now looking for ${search}.\n────────── ୨୧ ──────────\nPlease wait ...`,
     )
     .then((r) => {
       setTimeout(() => {
@@ -30,7 +30,7 @@ module.exports = async (api, msg, search) => {
     });
   if (!data) {
     return api
-      .sendMessage(msg.chat.id, `There's an error occured`)
+      .sendMessage(msg.chat.id, `ERR [${search}]: There's an error occured`)
       .then((r) => {
         setTimeout(() => {
           api.deleteMessage(r.chat.id, r.message_id);
@@ -40,7 +40,7 @@ module.exports = async (api, msg, search) => {
   }
 
   api
-    .sendMessage(msg.chat.id, `Song found: [${data.title}]`)
+    .sendMessage(msg.chat.id, `INFO [${data.title}]: Song Found`)
     .then((r) => {
       setTimeout(() => {
         api.deleteMessage(r.chat.id, r.message_id);
@@ -65,7 +65,7 @@ module.exports = async (api, msg, search) => {
       return api
         .sendMessage(
           msg.chat.id,
-          `Failed to retrieve the download url. The system will automatically retry: [${tries}/10]\nTitle: [${data.title}]`,
+          `RETRY [${data.title}]: Failed to retrieve the download url. The system will automatically retry: [${tries}/10]`,
         )
         .then((r) => {
           setTimeout(() => {
@@ -80,7 +80,7 @@ module.exports = async (api, msg, search) => {
             api
               .sendMessage(
                 msg.chat.id,
-                `The retry exceeds its limit, kindly retry later.`,
+                `ERR [${data.title}]: The retry exceeds its limit, kindly retry later.`,
               )
               .then((r) => {
                 setTimeout(() => {
@@ -97,7 +97,7 @@ module.exports = async (api, msg, search) => {
     api
       .sendMessage(
         msg.chat.id,
-        `The audio file is now processing [${data.title}]`,
+        `INFO [${data.title}]: The audio file is now processing...`,
       )
       .then((rx) => {
         http.get(newData.download_url, (res) => {
