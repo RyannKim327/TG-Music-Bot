@@ -115,7 +115,19 @@ module.exports = async (api, msg, search) => {
                 }
                 api.deleteMessage(rx.chat.id, rx.message_id);
               })
-              .catch((error) => {});
+              .catch((error) => {
+                api
+                  .sendMessage(
+                    msg.chat.id,
+                    `ERR [${data.title}]: ${JSON.stringify(error, null, 2)}`,
+                  )
+                  .then((res) => {
+                    setTimeout(() => {
+                      api.deleteMessage(res.chat.id, res.message_id);
+                    }, 2500);
+                  });
+                api.deleteMessage(rx.chat.id, rx.message_id);
+              });
           });
         });
       })
