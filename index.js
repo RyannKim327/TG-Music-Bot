@@ -7,7 +7,7 @@ const music = require("./src/music");
 const fb = require("./src/fbmusic");
 
 const token = process.env.TOKEN;
-const url = "https://tg-music-bot-odo2.onrender.com";
+const url = "https://tg-music-bot-svnp.onrender.com";
 
 const app = express();
 app.use(express.json());
