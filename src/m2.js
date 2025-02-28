@@ -4,7 +4,7 @@ const http = require("https");
 const log = require("./../utils/console");
 
 const editMessage = (api, res, msg) => {
-  api.editMessage(msg, {
+  api.editMessageText(msg, {
     chat_id: res.chat.id,
     message_id: res.message_id,
   });
