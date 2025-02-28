@@ -3,7 +3,7 @@ const fs = require("fs");
 const express = require("express");
 require("dotenv").config();
 
-const music = require("./src/music");
+const music = require("./src/m2");
 const fb = require("./src/fbmusic");
 
 const token = process.env.TOKEN;
