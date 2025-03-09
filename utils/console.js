@@ -28,13 +28,3 @@ module.exports = (from, msg, status = "i") => {
       .toUpperCase()}]:\t\x1b[37m${msg}`,
   );
 };
-// log = (from, message, type) => {
-//   if(typeof message === "object"){
-//     message = JSON.stringify(message, null, 2)
-//   }
-//   let color =
-//   switch(type.toLowerCase()[0]){
-//
-//   }
-//   console.log(`\x1b[32mLOG [${from}]:\x1b[37m ${message}`)
-// }
