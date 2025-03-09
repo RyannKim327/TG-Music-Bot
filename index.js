@@ -41,7 +41,8 @@ const start = async () => {
     });
 
     app.listen(process.env.PORT || 3000, () => {
-      console.log("HIHI");
+      console.log("Server started.");
+      console.log("Developed under MPOP Reverse II");
     });
 
     if (fs.existsSync(directory)) {
