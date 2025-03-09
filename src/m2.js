@@ -84,7 +84,10 @@ module.exports = async (api, msg, search) => {
       }
     }
     if (tries <= 10) {
-      const filename = `${__dirname}/../temp/${msg.chat.id}/${data.title.replace(/\W/gi, " ").trim().replace(/\s/gi, "_")}.mp3`;
+      const filename = `${__dirname}/../temp/${msg.chat.id}/${data.title
+        .replace(/([\/\\])/gi, " ")
+        .trim()
+        .replace(/\s/gi, "_")}.mp3`;
       const file = fs.createWriteStream(filename);
       editMessage(
         api,
@@ -95,7 +98,7 @@ module.exports = async (api, msg, search) => {
         r.pipe(file);
         file.on("finish", () => {
           api
-            .sendAudio(res.chat.id, fs.createReadStream(filename), {}, {})
+            .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
             .then((_) => {
               if (fs.existsSync(filename)) {
                 setTimeout(() => {
@@ -110,8 +113,4 @@ module.exports = async (api, msg, search) => {
     }
   };
   junk();
-  // })
-  //     .catch ((e) => {
-  //   log("Music", e, "error");
-  // });
 };
