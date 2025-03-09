@@ -27,10 +27,10 @@ const start = async () => {
     "Starter",
     `
   ╭―――――――――――――――――――――――――――――――――――――――――╮
-  │                                         │
-  │      Welcome to Telegram Music Bot      │
-  │     Developed by Ryann Kim Sesgundo     │
-  │                                         │
+  │                                          │
+  │      Welcome to Telegram Music Bot       │
+  │     Developed by Ryann Kim Sesgundo      │
+  │                                          │
   ╰―――――――――――――――――――――――――――――――――――――――――╯`,
   );
 
