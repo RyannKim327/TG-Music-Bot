@@ -6,6 +6,8 @@ require("dotenv").config();
 const music = require("./src/m2");
 const fb = require("./src/fbmusic");
 
+const c = require("./utils/console");
+
 const token = process.env.TOKEN;
 const url = "https://tg-music-bot-svnp.onrender.com";
 
@@ -21,12 +23,15 @@ const start = async () => {
     return console.error(`TOKEN [ERR]: Token not found`);
   }
 
-  console.log("╭―――――――――――――――――――――――――――――――――――――――――╮");
-  console.log("│                                         │");
-  console.log("│      Welcome to Telegram Music Bot      │");
-  console.log("│     Developed by Ryann Kim Sesgundo     │");
-  console.log("│                                         │");
-  console.log("╰―――――――――――――――――――――――――――――――――――――――――╯");
+  c(
+    "Starter",
+    `╭―――――――――――――――――――――――――――――――――――――――――╮
+│                                         │
+│      Welcome to Telegram Music Bot      │
+│     Developed by Ryann Kim Sesgundo     │
+│                                         │
+╰―――――――――――――――――――――――――――――――――――――――――╯`,
+  );
 
   const directory = `${__dirname}/temp`;
 
@@ -41,8 +46,8 @@ const start = async () => {
     });
 
     app.listen(process.env.PORT || 3000, () => {
-      console.log("Server started.");
-      console.log("Developed under MPOP Reverse II");
+      c("Server Initiator", "Server started.");
+      c("Server Initiator", "Developed under MPOP Reverse II");
     });
 
     if (fs.existsSync(directory)) {
@@ -55,7 +60,6 @@ const start = async () => {
 
     api.onText(/([\w\W]+)/gi, (msg, match) => {
       if (match[0].startsWith("/start")) {
-        // console.log(`KIM: ${JSON.stringify(msg)}`);
         api.deleteMessage(msg.chat.id, msg.message_id);
         api
           .sendMessage(
@@ -65,7 +69,6 @@ const start = async () => {
           .then((r) => {
             setTimeout(() => {
               api.deleteMessage(r.chat.id, r.message_id);
-              // console.log(`LOG: ${JSON.stringify(r)}`);
             }, 120000);
           })
           .catch((e) => {});
