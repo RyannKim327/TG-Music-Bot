@@ -62,7 +62,7 @@ module.exports = async (api, msg, search) => {
         console.error(error);
         return null;
       });
-    while (!music) {
+    if (!music) {
       editMessage(
         api,
         res,
@@ -70,17 +70,18 @@ module.exports = async (api, msg, search) => {
       );
       if (tries <= 10) {
         tries++;
-        music = await axios
-          .get(
-            `https://kaiz-ytmp4-downloader.vercel.app/ytmp3-v2?url=${encodeURI(data.url)}&quality=mp3`,
-          )
-          .then((res) => {
-            return res.data;
-          })
-          .catch((error) => {
-            console.error(error);
-            return null;
-          });
+        // music = await axios
+        //   .get(
+        //     `https://kaiz-ytmp4-downloader.vercel.app/ytmp3-v2?url=${encodeURI(data.url)}&quality=mp3`,
+        //   )
+        //   .then((res) => {
+        //     return res.data;
+        //   })
+        //   .catch((error) => {
+        //     console.error(error);
+        //     return null;
+        //   });
+        junk();
       } else {
         editMessage(
           api,
