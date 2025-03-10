@@ -53,7 +53,7 @@ module.exports = async (api, msg, search) => {
   const junk = async () => {
     let music = await axios
       .get(
-        `https://kaiz-ytmp4-downloader.vercel.app/ytmp3-v2?url=${encodeURIComponent(data.url)}&quality=mp3`,
+        `https://kaiz-ytmp4-downloader.vercel.app/ytmp4?url=${encodeURIComponent(data.url)}&quality=mp3`,
       )
       .then((res) => {
         return res.data;
@@ -113,12 +113,12 @@ module.exports = async (api, msg, search) => {
             .then((_) => {
               if (fs.existsSync(filename)) {
                 setTimeout(() => {
-                  fs.unlinkSync(filename, (e) => { });
+                  fs.unlinkSync(filename, (e) => {});
                 }, 10000);
               }
               api.deleteMessage(res.chat.id, res.message_id);
             })
-            .catch((e) => { });
+            .catch((e) => {});
         });
       });
     }
