@@ -53,7 +53,7 @@ module.exports = async (api, msg, search) => {
   const junk = async () => {
     let music = await axios
       .get(
-        `https://kaiz-ytmp4-downloader.vercel.app/ytmp4?url=${encodeURI(data.url)}&quality=mp3`,
+        `https://kaiz-ytmp4-downloader.vercel.app/ytmp3-v2?url=${encodeURI(data.url)}&quality=mp3`,
       )
       .then((res) => {
         return res.data;
@@ -72,7 +72,7 @@ module.exports = async (api, msg, search) => {
         tries++;
         music = await axios
           .get(
-            `https://kaiz-ytmp4-downloader.vercel.app/ytmp4?url=${encodeURI(data.url)}&quality=mp3`,
+            `https://kaiz-ytmp4-downloader.vercel.app/ytmp3-v2?url=${encodeURI(data.url)}&quality=mp3`,
           )
           .then((res) => {
             return res.data;
