@@ -70,7 +70,8 @@ module.exports = async (api, msg, search) => {
       );
       if (tries <= 10) {
         tries++;
-        return junk();
+        junk();
+        return;
       } else {
         editMessage(
           api,
@@ -85,7 +86,7 @@ module.exports = async (api, msg, search) => {
     }
     if (tries <= 10) {
       const filename = `${__dirname}/../temp/${msg.chat.id}/${data.title
-        .replace(/([\/\\])/gi, " ")
+        .replace(/([\W])/gi, " ")
         .trim()
         .replace(/\s/gi, "_")}.mp3`;
       const file = fs.createWriteStream(filename);

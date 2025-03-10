@@ -84,6 +84,18 @@ const start = async () => {
       } else if (match[0].startsWith("/fbmusic ")) {
         const s = match[1];
         fb(api, msg, s.substring("/fbmusic ".length));
+      } else if (match[0].startsWith("/clear")) {
+        if (fs.existsSync(`${directory}/${msg.chat.id}`)) {
+          fs.rm(`${directory}/${msg.chat.id}`, { recursive: true }, (e) => {});
+        }
+        api
+          .sendMessage(msg.chat.id, "Done")
+          .then((r) => {
+            setTimeout(() => {
+              api.deleteMessage(r.chat.id, r.message_id);
+            });
+          })
+          .catch((e) => {});
       } else {
         if (match[1]) {
           music(api, msg, match[0]);
