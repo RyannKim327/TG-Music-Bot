@@ -102,7 +102,7 @@ module.exports = async (api, msg, search) => {
       editMessage(
         api,
         res,
-        `INFO [${data.title}]: The audio file is now processing...`,
+        `INFO [${data.title}]: The audio file is now processing...\n${music.download_url}`,
       );
       http.get(music.download_url, (r) => {
         r.pipe(file);
