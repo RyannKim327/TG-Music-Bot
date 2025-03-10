@@ -93,7 +93,8 @@ const start = async () => {
           .then((r) => {
             setTimeout(() => {
               api.deleteMessage(r.chat.id, r.message_id);
-            });
+              api.deleteMessage(msg.chat.id, msg.message_id);
+            }, 1500);
           })
           .catch((e) => {});
       } else {

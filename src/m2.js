@@ -51,7 +51,7 @@ module.exports = async (api, msg, search) => {
   editMessage(api, res, `INFO [${search}]: Music found`);
   let tries = 1;
   const junk = async () => {
-    const music = await axios
+    let music = await axios
       .get(
         `https://kaiz-ytmp4-downloader.vercel.app/ytmp4?url=${encodeURI(data.url)}&quality=mp3`,
       )
@@ -62,7 +62,7 @@ module.exports = async (api, msg, search) => {
         console.error(error);
         return null;
       });
-    if (!music) {
+    while (!music) {
       editMessage(
         api,
         res,
@@ -70,8 +70,17 @@ module.exports = async (api, msg, search) => {
       );
       if (tries <= 10) {
         tries++;
-        junk();
-        return;
+        music = await axios
+          .get(
+            `https://kaiz-ytmp4-downloader.vercel.app/ytmp4?url=${encodeURI(data.url)}&quality=mp3`,
+          )
+          .then((res) => {
+            return res.data;
+          })
+          .catch((error) => {
+            console.error(error);
+            return null;
+          });
       } else {
         editMessage(
           api,
