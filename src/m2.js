@@ -112,7 +112,7 @@ module.exports = async (api, msg, search) => {
             if (error) {
               return 0;
             }
-            console.log(f);
+            console.log(f.size);
             return f.size;
           });
           console.log(_);
