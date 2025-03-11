@@ -105,18 +105,18 @@ module.exports = async (api, msg, search) => {
         res,
         `INFO [${data.title}]: The audio file is now processing...\n${music.download_url}`,
       );
-      http.get(music.download_url, (r) => {
+      http.get(music.download_url, async (r) => {
         r.pipe(file);
-        file.on("finish", () => {
-          const _ = fs.stat(filename, (error, f) => {
+        file.on("finish", async () => {
+          const $_ = await fs.stat(filename, (error, f) => {
             if (error) {
               return 0;
             }
             console.log(f.size);
             return f.size;
           });
-          console.log(_);
-          if (_ >= 1000) {
+          console.log($_);
+          if ($_ >= 1000) {
             api
               .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
               .then((_) => {
