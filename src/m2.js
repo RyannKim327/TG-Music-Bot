@@ -109,7 +109,7 @@ module.exports = async (api, msg, search) => {
         r.pipe(file);
         file.on("finish", () => {
           const _ = fs.stat(filename, (error, f) => {
-            if (err) {
+            if (error) {
               return 0;
             }
             return f.size;
