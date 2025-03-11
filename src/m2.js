@@ -114,6 +114,7 @@ module.exports = async (api, msg, search) => {
             }
             return f.size;
           });
+          console.log(_);
           if (_ >= 1000) {
             api
               .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
