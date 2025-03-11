@@ -108,7 +108,7 @@ module.exports = async (api, msg, search) => {
       http.get(music.download_url, async (r) => {
         r.pipe(file);
         file.on("finish", async () => {
-          const $_ = 0;
+          let $_ = 0;
           fs.stat(filename, (error, f) => {
             if (!error) {
               // console.log(f.size);
