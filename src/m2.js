@@ -53,7 +53,7 @@ module.exports = async (api, msg, search) => {
   const junk = async () => {
     let music = await axios
       .get(
-        `https://kaiz-apis.gleeze.com/api/ytmp3-v2?url=${encodeURI(data.url)}&quality=mp3`,
+        `https://kaiz-apis.gleeze.com/api/ytmp3-v2?url=${encodeURI(data.url)}`,
       )
       .then((res) => {
         return res.data;

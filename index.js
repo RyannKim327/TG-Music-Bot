@@ -26,12 +26,12 @@ const start = async () => {
   c(
     "Starter",
     `
-  ╭―――――――――――――――――――――――――――――――――――――――――╮
-  │                                          │
-  │      Welcome to Telegram Music Bot       │
-  │     Developed by Ryann Kim Sesgundo      │
-  │                                          │
-  ╰―――――――――――――――――――――――――――――――――――――――――╯`,
+        ╭―――――――――――――――――――――――――――――――――――――――――╮
+        │                                          │
+        │      Welcome to Telegram Music Bot       │
+        │     Developed by Ryann Kim Sesgundo      │
+        │                                          │
+        ╰―――――――――――――――――――――――――――――――――――――――――╯`,
   );
 
   const directory = `${__dirname}/temp`;
