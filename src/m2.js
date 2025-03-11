@@ -53,7 +53,7 @@ module.exports = async (api, msg, search) => {
   const junk = async () => {
     let music = await axios
       .get(
-        `https://kaiz-apis.gleeze.com/api/ytdown-mp3?url=${encodeURIComponent(data.url)}&quality=mp3`,
+        `https://kaiz-apis.gleeze.com/api/ytmp3-v2?url=${encodeURIComponent(data.url)}&quality=mp3`,
       )
       .then((res) => {
         return res.data;
@@ -114,7 +114,7 @@ module.exports = async (api, msg, search) => {
             }
             return f.size;
           });
-          if (_ > 10000) {
+          if (_ >= 1000) {
             api
               .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
               .then((_) => {
