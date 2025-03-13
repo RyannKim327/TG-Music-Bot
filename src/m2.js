@@ -47,8 +47,9 @@ module.exports = async (api, msg, search) => {
     setTimeout(() => {
       api.deleteMessage(res.chat.id, res.message_id);
     }, 5000);
+    return;
   }
-  editMessage(api, res, `INFO [${search}]: Music found`);
+  editMessage(api, res, `INFO [${data.title}]: Music found`);
   let tries = 1;
   const junk = async () => {
     let music = await axios
