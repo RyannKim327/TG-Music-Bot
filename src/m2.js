@@ -66,7 +66,7 @@ module.exports = async (api, msg, search) => {
         console.error(error);
         return null;
       });
-    if (music == null) {
+    if (!music.download_url) {
       editMessage(
         api,
         res,
@@ -74,20 +74,9 @@ module.exports = async (api, msg, search) => {
       );
       if (tries <= 10) {
         tries++;
-        // music = await axios
-        //   .get(
-        //     `https://kaiz-ytmp4-downloader.vercel.app/ytmp3-v2?url=${encodeURI(data.url)}&quality=mp3`,
-        //   )
-        //   .then((res) => {
-        //     return res.data;
-        //   })
-        //   .catch((error) => {
-        //     console.error(error);
-        //     return null;
-        //   });
         setTimeout(() => {
           junk();
-        }, 1500)
+        }, 1500);
       } else {
         editMessage(
           api,
@@ -124,17 +113,17 @@ module.exports = async (api, msg, search) => {
                 .then((_) => {
                   if (fs.existsSync(filename)) {
                     setTimeout(() => {
-                      fs.unlinkSync(filename, (e) => { });
+                      fs.unlinkSync(filename, (e) => {});
                     }, 10000);
                   }
                   api.deleteMessage(res.chat.id, res.message_id);
                 })
-                .catch((e) => { });
+                .catch((e) => {});
             } else {
               editMessage(api, res, `[ERR]: The file is corrupted`);
               if (fs.existsSync(filename)) {
                 setTimeout(() => {
-                  fs.unlinkSync(filename, (e) => { });
+                  fs.unlinkSync(filename, (e) => {});
                 }, 100);
               }
               setTimeout(() => {
