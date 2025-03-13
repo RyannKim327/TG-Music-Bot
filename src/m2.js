@@ -52,6 +52,9 @@ module.exports = async (api, msg, search) => {
   editMessage(api, res, `INFO [${data.title}]: Music found`);
   let tries = 1;
   const junk = async () => {
+    setTimeout(() => {
+      editMessage(api, res, `INFO [${data.title}]: Gathering information`);
+    }, 1000);
     let music = await axios
       .get(
         `https://kaiz-apis.gleeze.com/api/ytmp3-v2?url=${encodeURI(data.url)}`,
@@ -104,7 +107,7 @@ module.exports = async (api, msg, search) => {
       editMessage(
         api,
         res,
-        `INFO [${data.title}]: The audio file is now processing...\n${music.download_url}`,
+        `INFO [${data.title}]: The audio file is now processing...`,
       );
       http.get(music.download_url, async (r) => {
         r.pipe(file);
