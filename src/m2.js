@@ -66,7 +66,7 @@ module.exports = async (api, msg, search) => {
         console.error(error);
         return null;
       });
-    if (!music) {
+    if (music == null) {
       editMessage(
         api,
         res,
@@ -85,7 +85,9 @@ module.exports = async (api, msg, search) => {
         //     console.error(error);
         //     return null;
         //   });
-        junk();
+        setTimeout(() => {
+          junk();
+        }, 1500)
       } else {
         editMessage(
           api,
@@ -122,17 +124,17 @@ module.exports = async (api, msg, search) => {
                 .then((_) => {
                   if (fs.existsSync(filename)) {
                     setTimeout(() => {
-                      fs.unlinkSync(filename, (e) => {});
+                      fs.unlinkSync(filename, (e) => { });
                     }, 10000);
                   }
                   api.deleteMessage(res.chat.id, res.message_id);
                 })
-                .catch((e) => {});
+                .catch((e) => { });
             } else {
               editMessage(api, res, `[ERR]: The file is corrupted`);
               if (fs.existsSync(filename)) {
                 setTimeout(() => {
-                  fs.unlinkSync(filename, (e) => {});
+                  fs.unlinkSync(filename, (e) => { });
                 }, 100);
               }
               setTimeout(() => {
