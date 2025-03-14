@@ -64,7 +64,8 @@ module.exports = async (api, msg, search) => {
       })
       .catch((error) => {
         console.error(error);
-        return null;
+        throw Error(error);
+        // return null;
       });
     try {
       if (!music.download_url) {
