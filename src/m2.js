@@ -118,45 +118,57 @@ module.exports = async (api, msg, search) => {
         .replace(/([\W])/gi, " ")
         .trim()
         .replace(/\s/gi, "_")}.mp3`;
-      const file = fs.createWriteStream(filename);
-      editMessage(
-        api,
-        res,
-        `INFO [${data.title}]: The audio file is now processing...`,
-      );
-      http.get(music.download_url, async (r) => {
-        r.pipe(file);
-        file.on("finish", async () => {
-          fs.stat(filename, (error, f) => {
-            $_ = f.size;
+      if (fs.existsSync(filename)) {
+        editMessage(
+          api,
+          res,
+          `INFO [${data.title}]: The file is currently existing. Kindly message '/clear' without any quotation mark and retry.`,
+        );
+        setTimeout(() => {
+          api.deleteMessage(res.chat.id, res, message_id);
+          return;
+        });
+      } else {
+        const file = fs.createWriteStream(filename);
+        editMessage(
+          api,
+          res,
+          `INFO [${data.title}]: The audio file is now processing...`,
+        );
+        http.get(music.download_url, async (r) => {
+          r.pipe(file);
+          file.on("finish", async () => {
+            fs.stat(filename, (error, f) => {
+              $_ = f.size;
 
-            console.log($_);
-            if ($_ >= 1000) {
-              api
-                .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
-                .then((_) => {
-                  if (fs.existsSync(filename)) {
-                    setTimeout(() => {
-                      fs.unlinkSync(filename, (e) => {});
-                    }, 10000);
-                  }
-                  api.deleteMessage(res.chat.id, res.message_id);
-                })
-                .catch((e) => {});
-            } else {
-              editMessage(api, res, `[ERR]: The file is corrupted`);
-              if (fs.existsSync(filename)) {
+              console.log($_);
+              if ($_ >= 1000) {
+                api
+                  .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
+                  .then((_) => {
+                    if (fs.existsSync(filename)) {
+                      setTimeout(() => {
+                        fs.unlinkSync(filename, (e) => {});
+                      }, 10000);
+                    }
+                    api.deleteMessage(res.chat.id, res.message_id);
+                  })
+                  .catch((e) => {});
+              } else {
+                editMessage(api, res, `[ERR]: The file is corrupted`);
+                if (fs.existsSync(filename)) {
+                  setTimeout(() => {
+                    fs.unlinkSync(filename, (e) => {});
+                  }, 100);
+                }
                 setTimeout(() => {
-                  fs.unlinkSync(filename, (e) => {});
-                }, 100);
+                  api.deleteMessage(res.chat.id, res.message_id);
+                }, 5000);
               }
-              setTimeout(() => {
-                api.deleteMessage(res.chat.id, res.message_id);
-              }, 5000);
-            }
+            });
           });
         });
-      });
+      }
     }
   };
   junk();
