@@ -66,7 +66,31 @@ module.exports = async (api, msg, search) => {
         console.error(error);
         return null;
       });
-    if (!music.download_url) {
+    try {
+      if (!music.download_url) {
+        editMessage(
+          api,
+          res,
+          `ERR [${data.title}]: Failed to retrieve the download url. The system will automatically retry [${tries}/10]`,
+        );
+        if (tries <= 10) {
+          tries++;
+          setTimeout(() => {
+            junk();
+          }, 1500);
+        } else {
+          editMessage(
+            api,
+            res,
+            `ERR [${data.title}]: The retry exceeds its limit, kindly retry later.`,
+          );
+          setTimeout(() => {
+            api.deleteMessage(res.chat.id, res.message_id);
+          }, 2500);
+          return;
+        }
+      }
+    } catch (e) {
       editMessage(
         api,
         res,
