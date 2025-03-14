@@ -64,7 +64,7 @@ module.exports = async (api, msg, search) => {
       })
       .catch((error) => {
         console.error(error);
-        throw Error(error);
+        throw new Error(error);
         // return null;
       });
     try {
@@ -90,8 +90,6 @@ module.exports = async (api, msg, search) => {
           }, 2500);
           return;
         }
-      }
-    } catch (e) {
       editMessage(
         api,
         res,
