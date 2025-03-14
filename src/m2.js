@@ -23,7 +23,7 @@ module.exports = async (api, msg, search) => {
       return res;
     })
     .catch((e) => {
-      return null;
+      return { error: "Erorr Ngani" };
     });
   if (res === null) {
     editMessage(api, res, "Error");
@@ -42,7 +42,7 @@ module.exports = async (api, msg, search) => {
     .catch((err) => {
       return null;
     });
-  if (!data) {
+  if (data.error) {
     editMessage(api, res, `ERR [${search}]: An error occured`);
     setTimeout(() => {
       api.deleteMessage(res.chat.id, res.message_id);
@@ -68,7 +68,7 @@ module.exports = async (api, msg, search) => {
         // return null;
       });
     try {
-      if (!music.download_url) {
+      if (music.error) {
         editMessage(
           api,
           res,
@@ -143,21 +143,26 @@ module.exports = async (api, msg, search) => {
                 console.log($_);
                 if ($_ >= 1000) {
                   api
-                    .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
+                    .sendAudio(
+                      msg.chat.id,
+                      fs.createReadStream(filename),
+                      {},
+                      {},
+                    )
                     .then((_) => {
                       if (fs.existsSync(filename)) {
                         setTimeout(() => {
-                          fs.unlinkSync(filename, (e) => { });
+                          fs.unlinkSync(filename, (e) => {});
                         }, 10000);
                       }
                       api.deleteMessage(res.chat.id, res.message_id);
                     })
-                    .catch((e) => { });
+                    .catch((e) => {});
                 } else {
                   editMessage(api, res, `[ERR]: The file is corrupted`);
                   if (fs.existsSync(filename)) {
                     setTimeout(() => {
-                      fs.unlinkSync(filename, (e) => { });
+                      fs.unlinkSync(filename, (e) => {});
                     }, 100);
                   }
                   setTimeout(() => {
