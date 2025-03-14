@@ -122,12 +122,12 @@ module.exports = async (api, msg, search) => {
         editMessage(
           api,
           res,
-          `INFO [${data.title}]: The file is currently existing. Kindly message '/clear' without any quotation mark and retry.`,
+          `INFO [${data.title}]: The file is currently existing. Kindly message '/clear' without any quotation mark and retry.\n\nThis message will automatically deleted after 5 seconds`,
         );
         setTimeout(() => {
           api.deleteMessage(res.chat.id, res, message_id);
           return;
-        });
+        }, 5000);
       } else {
         const file = fs.createWriteStream(filename);
         editMessage(
