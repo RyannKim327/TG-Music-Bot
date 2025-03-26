@@ -62,7 +62,8 @@ const start = async () => {
 
     setTimeout(() => {
       if (Object.keys(cache).length > 0) {
-        for (let i in cache) {
+        c("Log", "Trying hard");
+        for (let i in Object.keys(cache)) {
           music(api, cache[i], i);
         }
       }
