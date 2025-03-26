@@ -3,6 +3,7 @@ const fs = require("fs");
 const http = require("https");
 
 module.exports = async (api, msg, search) => {
+  const cache = JSON.parse(fs.readFileSync("x.json", "utf-8"));
   if (!fs.existsSync(`${__dirname}/../temp/${msg.chat.id}`)) {
     fs.mkdirSync(`${__dirname}/../temp/${msg.chat.id}`);
   }
@@ -48,6 +49,8 @@ module.exports = async (api, msg, search) => {
     })
     .catch((e) => {});
 
+  cache[search] = msg;
+  fs.writeFileSync("x.json", JSON.stringify(cache, null, 2), "utf-8");
   let tries = 1;
   const retry = async () => {
     const newData = await axios
@@ -94,6 +97,7 @@ module.exports = async (api, msg, search) => {
     const filename = `${__dirname}/../temp/${msg.chat.id}/${data.title.replace(/\W/gi, " ").trim().replace(/\s/gi, "_")}.mp3`;
     const file = fs.createWriteStream(filename);
 
+    const _cache = JSON.parse(fs.readFileSync("x.json", "utf-8"));
     api
       .sendMessage(
         msg.chat.id,
@@ -110,6 +114,12 @@ module.exports = async (api, msg, search) => {
                   setTimeout(() => {
                     if (fs.existsSync(filename)) {
                       fs.unlinkSync(filename, (e) => {});
+                      delete _cache[search];
+                      fs.writeFileSync(
+                        "x.json",
+                        JSON.stringify(_cache, null, 2),
+                        "utf-8",
+                      );
                     }
                   }, 10000);
                 }

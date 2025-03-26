@@ -19,6 +19,7 @@ app.get("/", (req, res) => {
 });
 
 const start = async () => {
+  const cache = JSON.parse(fs.readFileSync("x.json", "utf-8"));
   if (!token) {
     return console.error(`TOKEN [ERR]: Token not found`);
   }
@@ -58,6 +59,16 @@ const start = async () => {
     setTimeout(() => {
       fs.mkdirSync(directory);
     }, 1000);
+
+    setTimeout(() => {
+      if (cache.keys().length > 0) {
+        for (let i in cache) {
+          music(api, cache[i], i);
+        }
+      }
+    }, 1500);
+
+    c("Server Engine", "Server is now restarted...");
 
     api.onText(/([\w\W]+)/gi, (msg, match) => {
       if (match[0].startsWith("/start")) {
