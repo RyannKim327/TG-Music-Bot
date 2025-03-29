@@ -63,10 +63,11 @@ module.exports = async (api, msg, search) => {
         return res.data;
       })
       .catch((error) => {
-        console.error(error);
-        throw new Error(error);
-        // return null;
+        return null;
       });
+    if (music === null) {
+      return junk();
+    }
     try {
       if (music.error) {
         editMessage(
