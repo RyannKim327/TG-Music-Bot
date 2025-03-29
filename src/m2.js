@@ -114,7 +114,7 @@ module.exports = async (api, msg, search) => {
       }
       if (tries <= 10) {
         const filename = `${__dirname}/../temp/${msg.chat.id}/${data.title
-          .replace(/([\W])/gi, " ")
+          .replace(/([\\\/]+)/gi, " ")
           .trim()
           .replace(/\s/gi, "_")}.mp3`;
         if (fs.existsSync(filename)) {
