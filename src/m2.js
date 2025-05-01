@@ -57,7 +57,7 @@ module.exports = async (api, msg, search) => {
     }, 1000);
     let music = await axios
       .get(
-        `https://kaiz-apis.gleeze.com/api/ytmp3-v2?url=${encodeURI(data.url)}`,
+        `https://kaiz-apis.gleeze.com/api/ytmp3-v2?url=${encodeURI("https://youtube.com/watch?=v")}${data.videoId}`,
       )
       .then((res) => {
         return res.data;
@@ -137,7 +137,7 @@ module.exports = async (api, msg, search) => {
           );
           http.get(music.download_url, async (r) => {
             r.pipe(file);
-            file.on("finish", async () => {
+            file.on("close", async () => {
               fs.stat(filename, (error, f) => {
                 $_ = f.size;
 
