@@ -28,7 +28,7 @@ module.exports = async (api, msg, search) => {
   if (!fs.existsSync(`${__dirname}/../temp/${msg.chat.id}`)) {
     fs.mkdirSync(`${__dirname}/../temp/${msg.chat.id}`);
   }
-  const res = await api
+  let res = await api
     .sendMessage(
       msg.chat.id,
       `────────── ୨୧ ──────────\nNow looking for ${search}.\nPlease wait ...\n────────── ୨୧ ──────────`,
