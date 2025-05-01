@@ -34,10 +34,10 @@ module.exports = async (api, msg, search) => {
   let q = "?q=";
   const data = await axios
     .get(
-      `https://kaiz-apis.gleeze.com/api/ytsearch${q}${encodeURIComponent(search)}`,
+      `https://kaiz-apis.gleeze.com/api/yt-metadata?title=${encodeURIComponent(search)}`,
     )
     .then((r) => {
-      return r.data.items[0];
+      return r.data;
     })
     .catch((err) => {
       return { error: "Error" };
