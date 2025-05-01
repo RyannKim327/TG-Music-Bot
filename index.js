@@ -9,7 +9,7 @@ const fb = require("./src/fbmusic");
 const c = require("./utils/console");
 
 const token = process.env.TOKEN;
-const url = "https://tg-music-bot-svnp.onrender.com";
+const url = process.env.URL || ""; // "https://tg-music-bot-svnp.onrender.com";
 
 const app = express();
 app.use(express.json());
@@ -28,10 +28,10 @@ const start = async () => {
     "Starter",
     `
         ╭―――――――――――――――――――――――――――――――――――――――――╮
-        │                                          │
-        │      Welcome to Telegram Music Bot       │
-        │     Developed by Ryann Kim Sesgundo      │
-        │                                          │
+        │                                         │
+        │      Welcome to Telegram Music Bot      │
+        │     Developed by Ryann Kim Sesgundo     │
+        │                                         │
         ╰―――――――――――――――――――――――――――――――――――――――――╯`,
   );
 
