@@ -40,7 +40,7 @@ module.exports = async (api, msg, search) => {
       return r.data.items[0];
     })
     .catch((err) => {
-      return null;
+      return { error: "Error" };
     });
   if (data.error) {
     editMessage(api, res, `ERR [${search}]: An error occured`);
