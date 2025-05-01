@@ -4,10 +4,24 @@ const http = require("https");
 const log = require("./../utils/console");
 
 const editMessage = (api, res, msg) => {
-  api.editMessageText(msg, {
-    chat_id: res.chat.id,
-    message_id: res.message_id,
-  });
+  try {
+    api.editMessageText(msg, {
+      chat_id: res.chat.id,
+      message_id: res.message_id,
+    });
+    return res;
+  } catch (e) {
+    api
+      .sendMessage(res.chat.id, msg)
+      .then(async (res_) => {
+        api.deleteMessage(res.chat.id, res.message_id);
+        return res_;
+      })
+      .catch((e) => {
+        return res;
+      });
+  }
+  return res;
 };
 
 module.exports = async (api, msg, search) => {
@@ -26,7 +40,7 @@ module.exports = async (api, msg, search) => {
       return { error: "Erorr Ngani" };
     });
   if (res === null) {
-    editMessage(api, res, "Error");
+    res = editMessage(api, res, "Error");
     setTimeout(() => {
       api.deleteMessage(res.chat.id, res.message_id);
     });
@@ -43,17 +57,21 @@ module.exports = async (api, msg, search) => {
       return { error: "Error" };
     });
   if (data.error) {
-    editMessage(api, res, `ERR [${search}]: An error occured`);
+    res = editMessage(api, res, `ERR [${search}]: An error occured`);
     setTimeout(() => {
       api.deleteMessage(res.chat.id, res.message_id);
     }, 5000);
     return;
   }
-  editMessage(api, res, `INFO [${data.title}]: Music found`);
+  res = editMessage(api, res, `INFO [${data.title}]: Music found`);
   let tries = 1;
   const junk = async () => {
     setTimeout(() => {
-      editMessage(api, res, `INFO [${data.title}]: Gathering information`);
+      res = editMessage(
+        api,
+        res,
+        `INFO [${data.title}]: Gathering information`,
+      );
     }, 1000);
     let music = await axios
       .get(
@@ -70,7 +88,7 @@ module.exports = async (api, msg, search) => {
     }
     try {
       if (music.error) {
-        editMessage(
+        res = editMessage(
           api,
           res,
           `ERR [${data.title}]: Failed to retrieve the download url. The system will automatically retry [${tries}/10]`,
@@ -81,7 +99,7 @@ module.exports = async (api, msg, search) => {
             junk();
           }, 1500);
         } else {
-          editMessage(
+          res = editMessage(
             api,
             res,
             `ERR [${data.title}]: The retry exceeds its limit, kindly retry later.`,
@@ -91,7 +109,7 @@ module.exports = async (api, msg, search) => {
           }, 2500);
           return;
         }
-        editMessage(
+        res = editMessage(
           api,
           res,
           `ERR [${data.title}]: Failed to retrieve the download url. The system will automatically retry [${tries}/10]`,
@@ -102,7 +120,7 @@ module.exports = async (api, msg, search) => {
             junk();
           }, 1500);
         } else {
-          editMessage(
+          res = editMessage(
             api,
             res,
             `ERR [${data.title}]: The retry exceeds its limit, kindly retry later.`,
@@ -119,7 +137,7 @@ module.exports = async (api, msg, search) => {
           .trim()
           .replace(/\s/gi, "_")}.mp3`;
         if (fs.existsSync(filename)) {
-          editMessage(
+          res = editMessage(
             api,
             res,
             `INFO [${data.title}]: The file is currently existing. Kindly message '/clear' without any quotation mark and retry.\n\nThis message will automatically deleted after 5 seconds`,
@@ -130,7 +148,7 @@ module.exports = async (api, msg, search) => {
           }, 5000);
         } else {
           const file = fs.createWriteStream(filename);
-          editMessage(
+          res = editMessage(
             api,
             res,
             `INFO [${data.title}]: The audio file is now processing...`,
@@ -160,7 +178,7 @@ module.exports = async (api, msg, search) => {
                     })
                     .catch((e) => {});
                 } else {
-                  editMessage(api, res, `[ERR]: The file is corrupted`);
+                  res = editMessage(api, res, `[ERR]: The file is corrupted`);
                   if (fs.existsSync(filename)) {
                     setTimeout(() => {
                       fs.unlinkSync(filename, (e) => {});
@@ -176,7 +194,7 @@ module.exports = async (api, msg, search) => {
         }
       }
     } catch (err) {
-      editMessage(
+      res = editMessage(
         api,
         res,
         `ERR [${data.title}]: Failed to retrieve the download url. The system will automatically retry [${tries}/10]`,
@@ -187,7 +205,7 @@ module.exports = async (api, msg, search) => {
           junk();
         }, 1500);
       } else {
-        editMessage(
+        res = editMessage(
           api,
           res,
           `ERR [${data.title}]: The retry exceeds its limit, kindly retry later.`,
@@ -197,7 +215,7 @@ module.exports = async (api, msg, search) => {
         }, 2500);
         return;
       }
-      editMessage(
+      res = editMessage(
         api,
         res,
         `ERR [${data.title}]: Failed to retrieve the download url. The system will automatically retry [${tries}/10]`,
@@ -208,7 +226,7 @@ module.exports = async (api, msg, search) => {
           junk();
         }, 1500);
       } else {
-        editMessage(
+        res = editMessage(
           api,
           res,
           `ERR [${data.title}]: The retry exceeds its limit, kindly retry later.`,
