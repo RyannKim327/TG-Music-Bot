@@ -137,7 +137,7 @@ module.exports = async (api, msg, search) => {
           );
           http.get(music.download_url, async (r) => {
             r.pipe(file);
-            file.on("close", async () => {
+            file.on("finish", async () => {
               fs.stat(filename, (error, f) => {
                 $_ = f.size;
 
