@@ -11,15 +11,8 @@ const c = require("./utils/console");
 const token = process.env.TOKEN;
 const url = process.env.URL || ""; // "https://tg-music-bot-svnp.onrender.com";
 
-const app = express();
-app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.send("Currently working now");
-});
-
 const start = async () => {
-  const cache = JSON.parse(fs.readFileSync("x.json", "utf-8"));
+  // const cache = JSON.parse(fs.readFileSync("x.json", "utf-8"));
   if (!token) {
     return console.error(`TOKEN [ERR]: Token not found`);
   }
@@ -38,19 +31,29 @@ const start = async () => {
   const directory = `${__dirname}/temp`;
 
   try {
-    const api = new tg(token);
+    let api = new tg(token, { polling: true });
 
-    api.setWebHook(`${url}/bot${token}`);
+    if (url) {
+      api = new tg(token);
+      const app = express();
+      app.use(express.json());
 
-    app.post(`/bot${token}`, (req, res) => {
-      api.processUpdate(req.body);
-      res.sendStatus(200);
-    });
+      app.get("/", (req, res) => {
+        res.send("Currently working now");
+      });
 
-    app.listen(process.env.PORT || 3000, () => {
-      c("Server Initiator", "Server started.");
-      c("Server Initiator", "Developed under MPOP Reverse II");
-    });
+      api.setWebHook(`${url}/bot${token}`);
+
+      app.post(`/bot${token}`, (req, res) => {
+        api.processUpdate(req.body);
+        res.sendStatus(200);
+      });
+
+      app.listen(process.env.PORT || 3000, () => {
+        c("Server Initiator", "Server started.");
+        c("Server Initiator", "Developed under MPOP Reverse II");
+      });
+    }
 
     if (fs.existsSync(directory)) {
       fs.rm(directory, { recursive: true }, (e) => {});
@@ -60,14 +63,14 @@ const start = async () => {
       fs.mkdirSync(directory);
     }, 1000);
 
-    setTimeout(() => {
-      if (Object.keys(cache).length > 0) {
-        c("Log", "Trying hard");
-        for (let i in Object.keys(cache)) {
-          music(api, cache[i], i);
-        }
-      }
-    }, 1500);
+    // setTimeout(() => {
+    //   if (Object.keys(cache).length > 0) {
+    //     c("Log", "Trying hard");
+    //     for (let i in Object.keys(cache)) {
+    //       music(api, cache[i], i);
+    //     }
+    //   }
+    // }, 1500);
 
     c("Server Engine", "Server is now restarted...");
 
