@@ -75,16 +75,20 @@ module.exports = async (api, msg, search) => {
     }, 1000);
     let music = await axios
       .get(
-        `https://kaiz-apis.gleeze.com/api/ytmp3-v2?url=${encodeURI("https://youtube.com/watch?=v")}${data.videoId}`,
+        `https://kaiz-apis.gleeze.com/api/ytmp3-v2?url=${encodeURI("https://youtube.com/watch?v=" + data.videoId)}`,
       )
       .then((res) => {
         return res.data;
       })
       .catch((error) => {
+        console.log(error);
         return null;
       });
     if (music === null) {
-      return junk();
+      res = editMessage(api, res, `INFO [${data.title}]: Retry`);
+      setTimeout(() => {
+        return junk();
+      }, 1500);
     }
     try {
       if (music.error) {
