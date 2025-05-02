@@ -31,7 +31,7 @@ const start = async () => {
   const directory = `${__dirname}/temp`;
 
   try {
-    let api = new tg(token, { polling: true });
+    let api = null;
 
     if (url.length > 1) {
       api = new tg(token);
@@ -53,6 +53,8 @@ const start = async () => {
         c("Server Initiator", "Server started.");
         c("Server Initiator", "Developed under MPOP Reverse II");
       });
+    } else {
+      api = new tg(token, { polling: true });
     }
 
     if (fs.existsSync(directory)) {
