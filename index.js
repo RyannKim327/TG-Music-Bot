@@ -33,7 +33,7 @@ const start = async () => {
   try {
     let api = new tg(token, { polling: true });
 
-    if (url) {
+    if (url.length > 1) {
       api = new tg(token);
       const app = express();
       app.use(express.json());
@@ -131,7 +131,7 @@ const start = async () => {
       }
     });
   } catch (error) {
-    console.error(`ERR: ${error}`);
+    c("Fallback", `ERR: ${error}`, "error");
   }
 };
 
