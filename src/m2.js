@@ -48,7 +48,7 @@ module.exports = async (api, msg, search) => {
   let q = "?q=";
   const data = await axios
     .get(
-      `https://kaiz-apis.gleeze.com/api/yt-metadata?title=${encodeURIComponent(search)}&apikey=${env.kaizapi}`,
+      `https://kaiz-apis.gleeze.com/api/yt-metadata?title=${encodeURIComponent(search)}&apikey=${env.KAIZAPI}`,
     )
     .then((r) => {
       return r.data;
@@ -75,7 +75,7 @@ module.exports = async (api, msg, search) => {
     }, 1000);
     let music = await axios
       .get(
-        `https://kaiz-apis.gleeze.com/api/ytmp3-v2?url=${encodeURI("https://youtube.com/watch?v=" + data.videoId)}&apikey=${env.kaizapi}`,
+        `https://kaiz-apis.gleeze.com/api/ytmp3-v2?url=${encodeURI("https://youtube.com/watch?v=" + data.videoId)}&apikey=${env.KAIZAPI}`,
       )
       .then((res) => {
         return res.data;
@@ -153,11 +153,11 @@ module.exports = async (api, msg, search) => {
           fs.unlinkSync(filename, (e) => {
             if (!e) {
               if (tries > 0) {
-                tries--
-                return junk()
+                tries--;
+                return junk();
               }
             }
-          })
+          });
         } else {
           const file = fs.createWriteStream(filename);
           res = editMessage(
@@ -183,17 +183,17 @@ module.exports = async (api, msg, search) => {
                     .then((_) => {
                       if (fs.existsSync(filename)) {
                         setTimeout(() => {
-                          fs.unlinkSync(filename, (e) => { });
+                          fs.unlinkSync(filename, (e) => {});
                         }, 10000);
                       }
                       api.deleteMessage(res.chat.id, res.message_id);
                     })
-                    .catch((e) => { });
+                    .catch((e) => {});
                 } else {
                   res = editMessage(api, res, `[ERR]: The file is corrupted`);
                   if (fs.existsSync(filename)) {
                     setTimeout(() => {
-                      fs.unlinkSync(filename, (e) => { });
+                      fs.unlinkSync(filename, (e) => {});
                     }, 100);
                   }
                   setTimeout(() => {
