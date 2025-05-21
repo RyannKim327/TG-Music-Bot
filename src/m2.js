@@ -88,7 +88,7 @@ module.exports = async (api, msg, search) => {
       res = editMessage(api, res, `INFO [${data.title}]: Retry`);
       setTimeout(() => {
         return junk();
-      }, 1500);
+      }, 5000);
     }
     try {
       if (music.error) {
@@ -101,7 +101,7 @@ module.exports = async (api, msg, search) => {
           tries++;
           setTimeout(() => {
             junk();
-          }, 1500);
+          }, 5000);
         } else {
           res = editMessage(
             api,
@@ -110,7 +110,7 @@ module.exports = async (api, msg, search) => {
           );
           setTimeout(() => {
             api.deleteMessage(res.chat.id, res.message_id);
-          }, 2500);
+          }, 5000);
           return;
         }
         res = editMessage(
@@ -122,7 +122,7 @@ module.exports = async (api, msg, search) => {
           tries++;
           setTimeout(() => {
             junk();
-          }, 1500);
+          }, 5000);
         } else {
           res = editMessage(
             api,
@@ -131,7 +131,7 @@ module.exports = async (api, msg, search) => {
           );
           setTimeout(() => {
             api.deleteMessage(res.chat.id, res.message_id);
-          }, 2500);
+          }, 5000);
           return;
         }
       }
@@ -183,17 +183,17 @@ module.exports = async (api, msg, search) => {
                     .then((_) => {
                       if (fs.existsSync(filename)) {
                         setTimeout(() => {
-                          fs.unlinkSync(filename, (e) => {});
+                          fs.unlinkSync(filename, (e) => { });
                         }, 10000);
                       }
                       api.deleteMessage(res.chat.id, res.message_id);
                     })
-                    .catch((e) => {});
+                    .catch((e) => { });
                 } else {
                   res = editMessage(api, res, `[ERR]: The file is corrupted`);
                   if (fs.existsSync(filename)) {
                     setTimeout(() => {
-                      fs.unlinkSync(filename, (e) => {});
+                      fs.unlinkSync(filename, (e) => { });
                     }, 100);
                   }
                   setTimeout(() => {
@@ -215,7 +215,7 @@ module.exports = async (api, msg, search) => {
         tries++;
         setTimeout(() => {
           junk();
-        }, 1500);
+        }, 5000);
       } else {
         res = editMessage(
           api,
@@ -224,7 +224,7 @@ module.exports = async (api, msg, search) => {
         );
         setTimeout(() => {
           api.deleteMessage(res.chat.id, res.message_id);
-        }, 2500);
+        }, 5000);
         return;
       }
       res = editMessage(
