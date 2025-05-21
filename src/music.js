@@ -92,7 +92,7 @@ module.exports = async (api, msg, search) => {
       );
       music = response.data;
     } catch (e) {
-      log(e);
+      log("Search", e);
       await delay(5000);
       return downloadMusic();
     }
@@ -111,7 +111,7 @@ module.exports = async (api, msg, search) => {
       try {
         fs.unlinkSync(filename);
       } catch (e) {
-        log(`Error deleting existing file: ${e.message}`);
+        log("File Deletion", `Error deleting existing file: ${e.message}`);
       }
     }
 
@@ -167,7 +167,7 @@ module.exports = async (api, msg, search) => {
           });
         })
         .on("error", async (e) => {
-          log(e);
+          log("Catch function", e);
           await editMessage(api, res, `[ERR]: Download failed, retrying...`);
           await delay(5000);
           resolve(downloadMusic());

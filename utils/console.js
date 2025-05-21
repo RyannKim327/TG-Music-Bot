@@ -1,4 +1,4 @@
-module.exports = (from, msg, status = "i") => {
+module.exports = (from = "", msg = "", status = "i") => {
   let color = 36;
   status = status[0].toLowerCase();
   switch (status) {
