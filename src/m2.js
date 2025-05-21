@@ -48,7 +48,7 @@ module.exports = async (api, msg, search) => {
   let q = "?q=";
   const data = await axios
     .get(
-      `https://kaiz-apis.gleeze.com/api/yt-metadata?title=${encodeURIComponent(search)}`,
+      `https://kaiz-apis.gleeze.com/api/yt-metadata?title=${encodeURIComponent(search)}&apikey=${env.kaizapi}`,
     )
     .then((r) => {
       return r.data;
@@ -75,7 +75,7 @@ module.exports = async (api, msg, search) => {
     }, 1000);
     let music = await axios
       .get(
-        `https://kaiz-apis.gleeze.com/api/ytmp3-v2?url=${encodeURI("https://youtube.com/watch?v=" + data.videoId)}`,
+        `https://kaiz-apis.gleeze.com/api/ytmp3-v2?url=${encodeURI("https://youtube.com/watch?v=" + data.videoId)}&apikey=${env.kaizapi}`,
       )
       .then((res) => {
         return res.data;
