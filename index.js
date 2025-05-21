@@ -3,7 +3,7 @@ const fs = require("fs");
 const express = require("express");
 require("dotenv").config();
 
-const music = require("./src/m2");
+const music = require("./src/music");
 const fb = require("./src/fbmusic");
 
 const c = require("./utils/console");

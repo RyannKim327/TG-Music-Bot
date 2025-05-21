@@ -1,154 +1,179 @@
 const axios = require("axios");
 const fs = require("fs");
-const http = require("https");
+const https = require("https");
+const log = require("./../utils/console");
+
+const editMessage = async (api, res, msg) => {
+  try {
+    await api.editMessageText(msg, {
+      chat_id: res.chat.id,
+      message_id: res.message_id,
+    });
+    return res;
+  } catch {
+    try {
+      const newRes = await api.sendMessage(res.chat.id, msg);
+      await api.deleteMessage(res.chat.id, res.message_id);
+      return newRes;
+    } catch {
+      return res;
+    }
+  }
+};
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 module.exports = async (api, msg, search) => {
-  const tryinghard = async () => {
-    try {
-      const cache = JSON.parse(fs.readFileSync("x.json", "utf-8"));
-      if (!fs.existsSync(`${__dirname}/../temp/${msg.chat.id}`)) {
-        fs.mkdirSync(`${__dirname}/../temp/${msg.chat.id}`);
-      }
-      api
-        .sendMessage(
-          msg.chat.id,
-          `Now looking for ${search}.\n────────── ୨୧ ──────────\nPlease wait ...`,
-        )
-        .then((r) => {
-          setTimeout(() => {
-            api.deleteMessage(r.chat.id, r.message_id);
-          }, 5000);
-        })
-        .catch((e) => {});
-      let q = "?q=";
-      const data = await axios
-        .get(
-          `https://kaiz-apis.gleeze.com/api/ytsearch${q}${encodeURIComponent(search)}`,
-        )
-        .then((r) => {
-          return r.data.items[0];
-        })
-        .catch((err) => {
-          return null;
-        });
-      if (!data) {
-        return api
-          .sendMessage(msg.chat.id, `ERR [${search}]: There's an error occured`)
-          .then((r) => {
-            setTimeout(() => {
-              api.deleteMessage(r.chat.id, r.message_id);
-            }, 2500);
-          })
-          .catch((e) => {});
-      }
+  const tempDir = `${__dirname}/../temp/${msg.chat.id}`;
+  if (!fs.existsSync(tempDir)) {
+    fs.mkdirSync(tempDir, { recursive: true });
+  }
 
-      api
-        .sendMessage(msg.chat.id, `INFO [${data.title}]: Song Found`)
-        .then((r) => {
-          setTimeout(() => {
-            api.deleteMessage(r.chat.id, r.message_id);
-          }, 2500);
-        })
-        .catch((e) => {});
+  let res;
+  try {
+    res = await api.sendMessage(
+      msg.chat.id,
+      `────────── ୨୧ ──────────\nNow looking for ${search}.\nPlease wait ...\n────────── ୨୧ ──────────`,
+    );
+  } catch {
+    return { error: "Error sending initial message" };
+  }
 
-      cache[search] = msg;
-      fs.writeFileSync("x.json", JSON.stringify(cache, null, 2), "utf-8");
-      let tries = 1;
-      const retry = async () => {
-        const newData = await axios
-          .get(
-            `https://kaiz-ytmp4-downloader.vercel.app/ytmp4?url=${encodeURI(data.url)}&quality=mp3`,
-          )
-          .then((res) => {
-            return res.data;
-          })
-          .catch((error) => {
-            console.error(error);
-            return null;
-          });
-        if (!newData) {
-          return api
-            .sendMessage(
-              msg.chat.id,
-              `RETRY [${data.title}]: Failed to retrieve the download url. The system will automatically retry: [${tries}/10]`,
-            )
-            .then((r) => {
-              setTimeout(() => {
-                api.deleteMessage(r.chat.id, r.message_id);
-              }, 2500);
-              if (tries <= 10) {
-                tries++;
-                setTimeout(() => {
-                  retry();
-                }, 1000);
-              } else {
-                api
-                  .sendMessage(
-                    msg.chat.id,
-                    `ERR [${data.title}]: The retry exceeds its limit, kindly retry later.`,
-                  )
-                  .then((r) => {
-                    setTimeout(() => {
-                      api.deleteMessage(r.chat.id, r.message_id);
-                    }, 2500);
-                  });
-              }
-            })
-            .catch((e) => {});
-        }
-        const filename = `${__dirname}/../temp/${msg.chat.id}/${data.title.replace(/\W/gi, " ").trim().replace(/\s/gi, "_")}.mp3`;
-        const file = fs.createWriteStream(filename);
+  // Fetch video metadata
+  let data;
+  try {
+    const response = await axios.get(
+      `https://kaiz-apis.gleeze.com/api/yt-metadata?title=${encodeURIComponent(search)}&apikey=${process.env.KAIZAPI}`,
+    );
+    data = response.data;
+  } catch {
+    await editMessage(api, res, `ERR [${search}]: An error occurred`);
+    setTimeout(() => api.deleteMessage(res.chat.id, res.message_id), 5000);
+    return;
+  }
 
-        const _cache = JSON.parse(fs.readFileSync("x.json", "utf-8"));
-        api
-          .sendMessage(
-            msg.chat.id,
-            `INFO [${data.title}]: The audio file is now processing...`,
-          )
-          .then((rx) => {
-            http.get(newData.download_url, (res) => {
-              res.pipe(file);
-              file.on("finish", () => {
-                api
-                  .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
-                  .then((r) => {
-                    if (fs.existsSync(filename)) {
-                      setTimeout(() => {
-                        if (fs.existsSync(filename)) {
-                          fs.unlinkSync(filename, (e) => {});
-                          delete _cache[search];
-                          fs.writeFileSync(
-                            "x.json",
-                            JSON.stringify(_cache, null, 2),
-                            "utf-8",
-                          );
-                        }
-                      }, 10000);
-                    }
-                    api.deleteMessage(rx.chat.id, rx.message_id);
-                  })
-                  .catch((error) => {
-                    api
-                      .sendMessage(
-                        msg.chat.id,
-                        `ERR [${data.title}]: ${JSON.stringify(error, null, 2)}`,
-                      )
-                      .then((res) => {
-                        setTimeout(() => {
-                          api.deleteMessage(res.chat.id, res.message_id);
-                        }, 2500);
-                      });
-                    api.deleteMessage(rx.chat.id, rx.message_id);
-                  });
-              });
-            });
-          })
-          .catch((e) => {});
-      };
-      retry();
-    } catch (e) {
-      tryinghard();
+  if (data.error) {
+    await editMessage(api, res, `ERR [${search}]: An error occurred`);
+    setTimeout(() => api.deleteMessage(res.chat.id, res.message_id), 5000);
+    return;
+  }
+
+  await editMessage(api, res, `INFO [${data.title}]: Music found`);
+
+  let tries = 0;
+  const maxRetries = 10;
+  const filename = `${tempDir}/${data.title
+    .replace(/[\\/]+/g, " ")
+    .trim()
+    .replace(/\s+/g, "_")}.mp3`;
+
+  const downloadMusic = async () => {
+    if (tries >= maxRetries) {
+      await editMessage(
+        api,
+        res,
+        `ERR [${data.title}]: Retry limit exceeded. Please try again later.`,
+      );
+      setTimeout(() => api.deleteMessage(res.chat.id, res.message_id), 5000);
+      return;
     }
+
+    tries++;
+    await editMessage(
+      api,
+      res,
+      `INFO [${data.title}]: Attempt ${tries} to retrieve music info...`,
+    );
+
+    let music;
+    try {
+      const response = await axios.get(
+        `https://kaiz-apis.gleeze.com/api/ytmp3-v2?url=${encodeURIComponent("https://youtube.com/watch?v=" + data.videoId)}&apikey=${process.env.KAIZAPI}`,
+      );
+      music = response.data;
+    } catch (e) {
+      log(e);
+      await delay(5000);
+      return downloadMusic();
+    }
+
+    if (music.error) {
+      await editMessage(
+        api,
+        res,
+        `ERR [${data.title}]: Failed to retrieve the download URL. Retrying [${tries}/${maxRetries}]...`,
+      );
+      await delay(5000);
+      return downloadMusic();
+    }
+
+    if (fs.existsSync(filename)) {
+      try {
+        fs.unlinkSync(filename);
+      } catch (e) {
+        log(`Error deleting existing file: ${e.message}`);
+      }
+    }
+
+    await editMessage(
+      api,
+      res,
+      `INFO [${data.title}]: Processing audio file...`,
+    );
+
+    return new Promise((resolve) => {
+      const file = fs.createWriteStream(filename);
+      https
+        .get(music.download_url, (response) => {
+          response.pipe(file);
+
+          file.on("finish", async () => {
+            file.close();
+
+            fs.stat(filename, async (err, stats) => {
+              if (err || stats.size < 1000) {
+                await editMessage(
+                  api,
+                  res,
+                  `[ERR]: The file is corrupted or too small.`,
+                );
+                if (fs.existsSync(filename)) {
+                  fs.unlinkSync(filename);
+                }
+                setTimeout(
+                  () => api.deleteMessage(res.chat.id, res.message_id),
+                  5000,
+                );
+                return resolve();
+              }
+
+              try {
+                await api.sendAudio(
+                  msg.chat.id,
+                  fs.createReadStream(filename),
+                  {},
+                  {},
+                );
+                if (fs.existsSync(filename)) {
+                  setTimeout(() => fs.unlinkSync(filename), 10000);
+                }
+                await api.deleteMessage(res.chat.id, res.message_id);
+                resolve();
+              } catch {
+                await editMessage(api, res, `[ERR]: Failed to send audio.`);
+                resolve();
+              }
+            });
+          });
+        })
+        .on("error", async (e) => {
+          log(e);
+          await editMessage(api, res, `[ERR]: Download failed, retrying...`);
+          await delay(5000);
+          resolve(downloadMusic());
+        });
+    });
   };
-  tryinghard();
+
+  downloadMusic();
 };
