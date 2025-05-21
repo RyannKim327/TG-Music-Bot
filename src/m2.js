@@ -100,7 +100,7 @@ module.exports = async (api, msg, search) => {
         if (tries <= 10) {
           tries++;
           setTimeout(() => {
-            junk();
+            return junk();
           }, 5000);
         } else {
           res = editMessage(
@@ -121,7 +121,7 @@ module.exports = async (api, msg, search) => {
         if (tries <= 10) {
           tries++;
           setTimeout(() => {
-            junk();
+            return junk();
           }, 5000);
         } else {
           res = editMessage(
@@ -214,7 +214,7 @@ module.exports = async (api, msg, search) => {
       if (tries <= 10) {
         tries++;
         setTimeout(() => {
-          junk();
+          return junk();
         }, 5000);
       } else {
         res = editMessage(
@@ -235,7 +235,7 @@ module.exports = async (api, msg, search) => {
       if (tries <= 10) {
         tries++;
         setTimeout(() => {
-          junk();
+          return junk();
         }, 1500);
       } else {
         res = editMessage(
