@@ -24,6 +24,9 @@ const editMessage = async (api, res, msg) => {
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 module.exports = async (api, msg, search) => {
+  if (search.startsWith("/music")) {
+    search = search.substring("/music").trim();
+  }
   const tempDir = `${__dirname}/../temp/${msg.chat.id}`;
   if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir, { recursive: true });
