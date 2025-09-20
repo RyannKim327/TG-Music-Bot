@@ -91,7 +91,7 @@ module.exports = async (api, msg, search) => {
     let music;
     try {
       const response = await axios.get(
-        `https://kaiz-apis.gleeze.com/api/ytdl?url=${encodeURI("https://www.youtube.com/watch?v=" + data.videoId)}&apikey=${process.env.KAIZAPI}`,
+        `https://kaiz-apis.gleeze.com/api/ytdown-mp3?url=${encodeURI("https://www.youtube.com/watch?v=" + data.videoId)}&apikey=${process.env.KAIZAPI}`,
       );
       music = response.data;
     } catch (e) {
