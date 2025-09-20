@@ -127,8 +127,8 @@ module.exports = async (api, msg, search) => {
     return new Promise((resolve) => {
       const file = fs.createWriteStream(filename);
       https
-        .get(music.download_url, (response) => {
-          response.pipe(file);
+        .get(music.download_url, async (response) => {
+          await response.pipe(file);
 
           file.on("finish", async () => {
             file.close();
