@@ -130,7 +130,6 @@ module.exports = async (api, msg, search) => {
       https
         .get(music.downloadUrl, (response) => {
           response.pipe(file);
-
           file.on("finish", async () => {
             file.close();
 
