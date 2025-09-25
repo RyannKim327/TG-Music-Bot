@@ -91,7 +91,8 @@ module.exports = async (api, msg, search) => {
     let music;
     try {
       const response = await axios.get(
-        `https://kaiz-apis.gleeze.com/api/ytdl?url=${encodeURIComponent("https://youtube.com/watch?v=" + data.videoId)}&apikey=${process.env.KAIZAPI}`,
+        // `https://kaiz-apis.gleeze.com/api/ytdl?url=${encodeURIComponent("https://youtube.com/watch?v=" + data.videoId)}&apikey=${process.env.KAIZAPI}`,
+        `https://api.ccprojectsapis-jonell.gleeze.com/api/audiomp3?url=${encodeURIComponent("https://youtube.com/watch?v=" + data.videoId)}`,
       );
       music = response.data;
     } catch (e) {
@@ -127,7 +128,7 @@ module.exports = async (api, msg, search) => {
     return new Promise((resolve) => {
       const file = fs.createWriteStream(filename);
       https
-        .get(music.download_url, (response) => {
+        .get(music.downloadUrl, (response) => {
           response.pipe(file);
 
           file.on("finish", async () => {
