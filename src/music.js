@@ -46,9 +46,9 @@ module.exports = async (api, msg, search) => {
   let data;
   try {
     const response = await axios.get(
-      `https://kaiz-apis.gleeze.com/api/yt-metadata?title=${encodeURIComponent(search)}&apikey=${process.env.KAIZAPI}`,
+      `https://api.ccprojectsapis-jonell.gleeze.com/api/ytsearch?title=${encodeURIComponent(search)}`,
     );
-    data = response.data;
+    data = response.data[0];
   } catch {
     await editMessage(api, res, `ERR [${search}]: An error occurred`);
     setTimeout(() => api.deleteMessage(res.chat.id, res.message_id), 5000);
