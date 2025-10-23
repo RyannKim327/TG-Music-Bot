@@ -55,11 +55,11 @@ module.exports = async (api, msg, search) => {
     return;
   }
 
-  if (data.error) {
-    await editMessage(api, res, `ERR [${search}]: An error occurred`);
-    setTimeout(() => api.deleteMessage(res.chat.id, res.message_id), 5000);
-    return;
-  }
+  // if (data.error) {
+  //   await editMessage(api, res, `ERR [${search}]: An error occurred`);
+  //   setTimeout(() => api.deleteMessage(res.chat.id, res.message_id), 5000);
+  //   return;
+  // }
 
   await editMessage(api, res, `INFO [${data.title}]: Music found`);
 
