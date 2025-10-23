@@ -48,7 +48,7 @@ module.exports = async (api, msg, search) => {
     const response = await axios.get(
       `https://api.ccprojectsapis-jonell.gleeze.com/api/ytsearch?title=${encodeURIComponent(search)}`,
     );
-    data = response.data[0];
+    data = response.data.results[0];
   } catch {
     await editMessage(api, res, `ERR [${search}]: An error occurred`);
     setTimeout(() => api.deleteMessage(res.chat.id, res.message_id), 5000);
