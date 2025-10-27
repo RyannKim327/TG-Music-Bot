@@ -115,20 +115,25 @@ const start = async () => {
           })
           .catch((e) => {});
       } else {
-        if (match[1]) {
-          music(api, msg, match[0]);
-          setTimeout(() => {
-            api.deleteMessage(msg.chat.id, msg.message_id);
-          }, 1000);
-        } else {
-          api
-            .sendMessage(msg.chat.id, "Invalid message, please try again")
-            .then((r) => {
-              setTimeout(() => {
-                api.deleteMessage(r.chat.id, r.message_id);
-              });
-            })
-            .catch((e) => {});
+        if (msg.chat.type === "private" || match[0].startsWith("/music")) {
+          if (match[0].startsWith("/")) {
+            match[0] = match[0].substring("/music ".length);
+          }
+          if (match[1]) {
+            music(api, msg, match[0]);
+            setTimeout(() => {
+              api.deleteMessage(msg.chat.id, msg.message_id);
+            }, 1000);
+          } else {
+            api
+              .sendMessage(msg.chat.id, "Invalid message, please try again")
+              .then((r) => {
+                setTimeout(() => {
+                  api.deleteMessage(r.chat.id, r.message_id);
+                });
+              })
+              .catch((e) => {});
+          }
         }
       }
     });
