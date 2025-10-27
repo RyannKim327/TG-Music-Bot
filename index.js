@@ -117,7 +117,9 @@ const start = async () => {
       } else {
         if (msg.chat.type === "private" || match[0].startsWith("/music")) {
           if (match[0].startsWith("/")) {
-            match[0] = match[0].substring("/music ".length);
+            const spl = match[0].split(" ");
+            spl.shift();
+            match[0] = spl.join(" ");
           }
           if (match[1]) {
             music(api, msg, match[0]);
