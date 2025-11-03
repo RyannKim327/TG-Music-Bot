@@ -27,6 +27,12 @@ module.exports = async (api, msg, search) => {
   if (search.startsWith("/music")) {
     search = search.substring("/music").trim();
   }
+
+  if (search.startsWith("https://") || search.startsWith("http://")) {
+    const modify = search.split("?");
+    search = modify[0];
+  }
+
   const tempDir = `${__dirname}/../temp/${msg.chat.id}`;
   if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir, { recursive: true });
