@@ -42,7 +42,12 @@ module.exports = async (api, msg, search) => {
   try {
     res = await api.sendMessage(
       msg.chat.id,
-      `────────── ୨୧ ──────────\nNow looking for ${search}.\nPlease wait ...\n────────── ୨୧ ──────────`,
+      `
+────────── ୨୧ ──────────
+Now looking for ${search}.
+    ───  ⋆⋅☼⋅⋆  ───
+      Please wait ...
+────────── ୨୧ ──────────`,
     );
   } catch {
     return { error: "Error sending initial message" };
@@ -166,7 +171,10 @@ module.exports = async (api, msg, search) => {
                 if (fs.existsSync(filename)) {
                   setTimeout(() => fs.unlinkSync(filename), 10000);
                 }
-                await api.deleteMessage(res.chat.id, res.message_id);
+                await editMessage(api, res, `Enjoy your music.\n\n- ячз`);
+                setTimeout(async () => {
+                  await api.deleteMessage(res.chat.id, res.message_id);
+                }, 1500);
                 resolve();
               } catch {
                 await editMessage(api, res, `[ERR]: Failed to send audio.`);
