@@ -44,9 +44,9 @@ module.exports = async (api, msg, search) => {
       msg.chat.id,
       `
 ────────── ୨୧ ──────────
-Now looking for ${search}.
-    ───  ⋆⋅☼⋅⋆  ───
-      Please wait ...
+    Now looking for ${search}.
+        ───  ⋆⋅☼⋅⋆  ───
+          Please wait ...
 ────────── ୨୧ ──────────`,
     );
   } catch {
@@ -174,7 +174,7 @@ Now looking for ${search}.
                 await editMessage(api, res, `Enjoy your music.\n\n- ячз`);
                 setTimeout(async () => {
                   await api.deleteMessage(res.chat.id, res.message_id);
-                }, 1500);
+                }, 2500);
                 resolve();
               } catch {
                 await editMessage(api, res, `[ERR]: Failed to send audio.`);
