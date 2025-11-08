@@ -29,7 +29,7 @@ module.exports = async (api, msg, search) => {
   }
 
   if (search.startsWith("https://") || search.startsWith("http://")) {
-    if (search.includes("/watch?v=")) {
+    if (search.includes("/watch?v=") && search.includes("&")) {
       const modify = split("&");
       search = modify[0];
     } else {
