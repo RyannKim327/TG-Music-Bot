@@ -25,7 +25,9 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 module.exports = async (api, msg, search) => {
   if (search.startsWith("/music")) {
-    search = search.substring("/music").trim();
+    const s = search.split(" ")
+    s.shift()
+    search = s.join(" ").trim();
   }
 
   if (search.startsWith("https://") || search.startsWith("http://")) {
