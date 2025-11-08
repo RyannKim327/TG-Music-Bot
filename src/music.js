@@ -29,9 +29,9 @@ module.exports = async (api, msg, search) => {
   }
 
   if (search.startsWith("https://") || search.startsWith("http://")) {
-    if (search.includes("?watch")) {
-      const modify = split("&")
-      search modify[0]
+    if (search.includes("?watch=")) {
+      const modify = split("&");
+      search = modify[0];
     } else {
       const modify = search.split("?");
       search = modify[0];
