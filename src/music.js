@@ -25,14 +25,14 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 module.exports = async (api, msg, search) => {
   if (search.startsWith("/music")) {
-    const s = search.split(" ")
-    s.shift()
+    const s = search.split(" ");
+    s.shift();
     search = s.join(" ").trim();
   }
 
   if (search.startsWith("https://") || search.startsWith("http://")) {
     if (search.includes("/watch?v=") && search.includes("&")) {
-      const modify = split("&");
+      const modify = search.split("&");
       search = modify[0];
     } else {
       const modify = search.split("?");
