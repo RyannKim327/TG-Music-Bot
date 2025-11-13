@@ -49,12 +49,7 @@ module.exports = async (api, msg, search) => {
   try {
     res = await api.sendMessage(
       msg.chat.id,
-      `
-────────── ୨୧ ──────────
-    Now looking for ${search}.
-        ───  ⋆⋅☼⋅⋆  ───
-          Please wait ...
-────────── ୨୧ ──────────`,
+      `『Now looking for\n${search}\nPlease wait ...』`,
     );
   } catch {
     return { error: "Error sending initial message" };
@@ -68,7 +63,7 @@ module.exports = async (api, msg, search) => {
     );
     data = response.data.results[0];
   } catch {
-    await editMessage(api, res, `ERR [${search}]: An error occurred`);
+    await editMessage(api, res, `ERR 『${search}』: An error occurred`);
     setTimeout(() => api.deleteMessage(res.chat.id, res.message_id), 5000);
     return;
   }
@@ -79,7 +74,7 @@ module.exports = async (api, msg, search) => {
   //   return;
   // }
 
-  await editMessage(api, res, `INFO [${data.title}]: Music found`);
+  await editMessage(api, res, `INFO 『${data.title}』: Music found`);
 
   let tries = 0;
   const maxRetries = 10;
@@ -93,7 +88,7 @@ module.exports = async (api, msg, search) => {
       await editMessage(
         api,
         res,
-        `ERR [${data.title}]: Retry limit exceeded. Please try again later.`,
+        `ERR 『${data.title}』: Retry limit exceeded. Please try again later.`,
       );
       setTimeout(() => api.deleteMessage(res.chat.id, res.message_id), 5000);
       return;
@@ -103,7 +98,7 @@ module.exports = async (api, msg, search) => {
     await editMessage(
       api,
       res,
-      `INFO [${data.title}]: Attempt ${tries} to retrieve music info...`,
+      `INFO 『${data.title}』: Attempt ${tries} to retrieve music info...`,
     );
 
     let music;
@@ -123,7 +118,7 @@ module.exports = async (api, msg, search) => {
       await editMessage(
         api,
         res,
-        `ERR [${data.title}]: Failed to retrieve the download URL. Retrying [${tries}/${maxRetries}]...`,
+        `ERR 『${data.title}』: Failed to retrieve the download URL. Retrying 『${tries}/${maxRetries}』...`,
       );
       await delay(5000);
       return downloadMusic();
@@ -140,7 +135,7 @@ module.exports = async (api, msg, search) => {
     await editMessage(
       api,
       res,
-      `INFO [${data.title}]: Processing audio file...`,
+      `INFO 『${data.title}』: Processing audio file...`,
     );
 
     return new Promise((resolve) => {
@@ -148,11 +143,18 @@ module.exports = async (api, msg, search) => {
       https
         .get(music.downloadUrl, (response) => {
           response.pipe(file);
+          
+          response.on("data", chunk => {
+            downloaded += chunk.length;
+            const percent = ((downloaded / total) * 100).toFixed(2);
+            process.stdout.write(`Downloading... ${percent}%\r`);
+          });
+          
           file.on("finish", async () => {
             file.close();
 
             fs.stat(filename, async (err, stats) => {
-              if (err || stats.size < 1000) {
+              if (err || stats.size < 500) {
                 await editMessage(
                   api,
                   res,
