@@ -143,13 +143,16 @@ module.exports = async (api, msg, search) => {
       https
         .get(music.downloadUrl, (response) => {
           response.pipe(file);
-          
+
+          let downloaded = 0
+
           response.on("data", chunk => {
             downloaded += chunk.length;
             const percent = ((downloaded / total) * 100).toFixed(2);
-            process.stdout.write(`Downloading... ${percent}%\r`);
+            // process.stdout.write(`Downloading... ${percent}%\r`);
+            await editMessage(api, res, `[LOG]: ${percent}`)
           });
-          
+
           file.on("finish", async () => {
             file.close();
 
