@@ -31,10 +31,10 @@ module.exports = async (api, msg, search) => {
   }
 
   if (search.startsWith("https://") || search.startsWith("http://")) {
-    if (search.includes("/watch?v=") && search.includes("&")) {
+    if (search.includes("youtube.com") && search.includes("&")) {
       const modify = search.split("&");
       search = modify[0];
-    } else if (!search.includes("/watch?v=")) {
+    } else if (search.includes("youtu.be")) {
       const modify = search.split("?");
       search = modify[0];
     }
