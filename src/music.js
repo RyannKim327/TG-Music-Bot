@@ -34,7 +34,7 @@ module.exports = async (api, msg, search) => {
     if (search.includes("/watch?v=") && search.includes("&")) {
       const modify = search.split("&");
       search = modify[0];
-    } else {
+    } else if (!search.includes("/watch?v=")) {
       const modify = search.split("?");
       search = modify[0];
     }
