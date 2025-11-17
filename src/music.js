@@ -29,14 +29,17 @@ module.exports = async (api, msg, search) => {
     s.shift();
     search = s.join(" ").trim();
   }
+  let isLink = false;
 
   if (search.startsWith("https://") || search.startsWith("http://")) {
     if (search.includes("youtube.com") && search.includes("&")) {
+      isLink = true;
       const modify = search.split("&");
-      search = modify[0];
+      search = modify[0].split("watch?v=")[1];
     } else if (search.includes("youtu.be")) {
+      isLink = true;
       const modify = search.split("?");
-      search = modify[0];
+      search = modify[0].split("/");
     }
   }
 
@@ -61,7 +64,15 @@ module.exports = async (api, msg, search) => {
     const response = await axios.get(
       `https://api.ccprojectsapis-jonell.gleeze.com/api/ytsearch?title=${encodeURIComponent(search)}`,
     );
-    data = response.data.results[0];
+    let i = 0;
+    data = response.data.results[i];
+    while (
+      data.videoId === search &&
+      i < response.data.results.length &&
+      isLink
+    ) {
+      data = response.data.results[i];
+    }
   } catch {
     await editMessage(api, res, `ERR 『${search}』: An error occurred`);
     setTimeout(() => api.deleteMessage(res.chat.id, res.message_id), 5000);
