@@ -31,17 +31,35 @@ module.exports = async (api, msg, search) => {
   }
   let isLink = false;
 
-  if (search.startsWith("https://") || search.startsWith("http://")) {
-    if (search.includes("youtube.com") && search.includes("&")) {
-      isLink = true;
-      const modify = search.split("&");
-      search = modify[0].split("watch?v=")[1];
-    } else if (search.includes("youtu.be")) {
-      isLink = true;
-      const modify = search.split("?");
-      search = modify[0].split("/");
+  if (search.includes("youtube.com")) {
+    isLink = true;
+    // TODO: URL Matching
+    const regex = /youtube\.com\/watch\?v=([\w\W]+)/;
+    if (regex.test(search)) {
+      // TODO: Modification
+      const modify = search.match(regex)[1];
+      search = modify.split("&")[0];
     }
   }
+  if (search.includes("youtu.be")) {
+    isLink = true;
+    const regex = /youtu\.be\//;
+    if (regex.test(search)) {
+      const modify = search.march(regex)[1];
+      search = modify.split("?")[0];
+    }
+  }
+  // if (search.startsWith("https://") || search.startsWith("http://")) {
+  //   if (search.includes("youtube.com") && search.includes("&")) {
+  //     isLink = true;
+  //     const modify = search.split("&");
+  //     search = modify[0].split("watch?v=")[1];
+  //   } else if (search.includes("youtu.be")) {
+  //     isLink = true;
+  //     const modify = search.split("?");
+  //     search = modify[0].split("/");
+  //   }
+  // }
 
   const tempDir = `${__dirname}/../temp/${msg.chat.id}`;
   if (!fs.existsSync(tempDir)) {
