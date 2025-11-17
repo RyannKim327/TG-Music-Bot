@@ -30,7 +30,7 @@ module.exports = async (api, msg, search) => {
     search = s.join(" ").trim();
   }
   let isLink = false;
-
+  let videoId = "";
   if (search.includes("youtube.com")) {
     isLink = true;
     // TODO: URL Matching
@@ -38,7 +38,8 @@ module.exports = async (api, msg, search) => {
     if (regex.test(search)) {
       // TODO: Modification
       const modify = search.match(regex)[1];
-      search = modify.split("&")[0];
+      search = `https://youtube.com/watch?=${modify.split("&")[0]}`;
+      videoId = modify.split("&")[0];
     }
   }
   if (search.includes("youtu.be")) {
@@ -46,7 +47,8 @@ module.exports = async (api, msg, search) => {
     const regex = /youtu\.be\//;
     if (regex.test(search)) {
       const modify = search.march(regex)[1];
-      search = modify.split("?")[0];
+      search = `https://youtube.com/watch?=${modify.split("?")[0]}`;
+      videoId = modify.split("?")[0];
     }
   }
   // if (search.startsWith("https://") || search.startsWith("http://")) {
@@ -85,7 +87,7 @@ module.exports = async (api, msg, search) => {
     let i = 0;
     data = response.data.results[i];
     while (
-      data.videoId !== search &&
+      data.videoId !== videoId &&
       i < response.data.results.length &&
       isLink
     ) {
