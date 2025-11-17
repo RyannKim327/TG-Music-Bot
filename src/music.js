@@ -67,11 +67,13 @@ module.exports = async (api, msg, search) => {
     let i = 0;
     data = response.data.results[i];
     while (
-      data.videoId === search &&
+      data.videoId !== search &&
       i < response.data.results.length &&
       isLink
     ) {
+      console.log("Link Test Activation");
       data = response.data.results[i];
+      i++;
     }
   } catch {
     await editMessage(api, res, `ERR 『${search}』: An error occurred`);
