@@ -46,7 +46,7 @@ module.exports = async (api, msg, search) => {
     isLink = true;
     const regex = /youtu\.be\//;
     if (regex.test(search)) {
-      const modify = search.march(regex)[1];
+      const modify = search.match(regex)[1];
       search = `https://youtube.com/watch?=${modify.split("?")[0]}`;
       videoId = modify.split("?")[0];
     }
