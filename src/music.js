@@ -44,7 +44,7 @@ module.exports = async (api, msg, search) => {
   }
   if (search.includes("youtu.be")) {
     isLink = true;
-    const regex = /youtu\.be\//;
+    const regex = /youtu\.be\/([\w\W]+)/;
     if (regex.test(search)) {
       const modify = search.match(regex)[1];
       search = `https://youtube.com/watch?=${modify.split("?")[0]}`;
