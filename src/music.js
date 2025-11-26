@@ -214,15 +214,19 @@ module.exports = async (api, msg, search) => {
                   {},
                 );
                 if (fs.existsSync(filename)) {
-                  setTimeout(() => fs.unlinkSync(filename), 10000);
+                  setTimeout(() => fs.unlinkSync(filename), 30000);
                 }
                 await editMessage(api, res, `Enjoy your music.\n\n- ячз`);
                 setTimeout(async () => {
                   await api.deleteMessage(res.chat.id, res.message_id);
                 }, 2500);
                 resolve();
-              } catch {
-                await editMessage(api, res, `[ERR]: Failed to send audio.`);
+              } catch (e) {
+                await editMessage(
+                  api,
+                  res,
+                  `[ERR]: Failed to send audio.\nError Info: ${e.message}`,
+                );
                 resolve();
               }
             });
