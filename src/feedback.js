@@ -18,13 +18,20 @@ module.exports = async (api, msg, content) => {
     {
       application: "Amogus Bot [Music Bot]",
       message: content,
+      userId: msg.chat.id,
     },
   );
+
   if (data) {
-    api.sendMessage(msg.chat.id, data.from).then((r) => {
-      setTimeout(() => {
-        api.deleteMessage(msg.chat.id, r.message_id);
+    api
+      .sendMessage(
+        msg.chat.id,
+        "Thank you for your feedback. If ever you encounter some error, please let us know.",
+      )
+      .then((r) => {
+        setTimeout(() => {
+          api.deleteMessage(msg.chat.id, r.message_id);
+        }, 5000);
       });
-    });
   }
 };
