@@ -1,12 +1,14 @@
 {
   "dependencies": {
     "axios": "^1.6.8",
+    "axios-cookiejar-support": "^6.0.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.2",
     "fs": "^0.0.1-security",
     "https": "^1.0.0",
     "node-telegram-bot-api": "^0.66.0",
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "tough-cookie": "^6.0.0"
   },
   "name": "tg-music-bot",
   "version": "1.0.0",

@@ -7,6 +7,7 @@ const music = require("./src/music");
 const fb = require("./src/fbmusic");
 
 const c = require("./utils/console");
+const feedback = require("./src/feedback");
 
 const token = process.env.TOKEN;
 const url = process.env.URL || ""; // "https://tg-music-bot-svnp.onrender.com";
@@ -114,6 +115,8 @@ const start = async () => {
             }, 1500);
           })
           .catch((e) => {});
+      } else if (match[0].startsWith("/feedback ")) {
+        feedback(api, msg, match[0].substring("/feedback ".length));
       } else {
         if (msg.chat.type === "private" || match[0].startsWith("/music")) {
           if (match[0].startsWith("/")) {
