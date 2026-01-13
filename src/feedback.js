@@ -11,16 +11,13 @@ module.exports = async (api, msg, content) => {
     }),
   );
 
-  await client.get("https://api-mpop-backend.onrender.com/set-cookie");
+  await client.get(`${env.API_BACKEND}/set-cookie`);
 
-  const { data } = await client.post(
-    "https://api-mpop-backend.onrender.com/feedback/submit",
-    {
-      application: "Amogus Bot [Music Bot]",
-      message: content,
-      userId: msg.chat.id,
-    },
-  );
+  const { data } = await client.post(`${env.API_BACKEND}/feedback/submit`, {
+    application: "Amogus Bot [Music Bot]",
+    message: content,
+    userId: msg.chat.id,
+  });
 
   if (data) {
     api
