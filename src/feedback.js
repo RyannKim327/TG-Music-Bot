@@ -15,13 +15,16 @@ module.exports = async (api, msg, content) => {
     }),
   );
 
-  await client.get(`${env.API_BACKEND}/set-cookie`);
+  await client.get(`${process.env.API_BACKEND}/set-cookie`);
 
-  const { data } = await client.post(`${env.API_BACKEND}/feedback/submit`, {
-    application: "Amogus Bot [Music Bot]",
-    message: content,
-    userId: msg.chat.id,
-  });
+  const { data } = await client.post(
+    `${process.env.API_BACKEND}/feedback/submit`,
+    {
+      application: "Amogus Bot [Music Bot]",
+      message: content,
+      userId: msg.chat.id,
+    },
+  );
 
   if (data) {
     await api.editMessageText(msg, {
