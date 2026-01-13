@@ -3,6 +3,10 @@ const wrap = require("axios-cookiejar-support");
 const axios = require("axios");
 
 module.exports = async (api, msg, content) => {
+  const send = await api.sendMessage(
+    msg.chat.id,
+    "Sending Feedback, please don't delete this message",
+  );
   const jar = new tc.CookieJar();
   const client = wrap.wrapper(
     axios.create({
@@ -20,15 +24,20 @@ module.exports = async (api, msg, content) => {
   });
 
   if (data) {
-    api
-      .sendMessage(
-        msg.chat.id,
-        "Thank you for your feedback. If ever you encounter some error, please let us know.",
-      )
-      .then((r) => {
-        setTimeout(() => {
-          api.deleteMessage(msg.chat.id, r.message_id);
-        }, 5000);
-      });
+    await api.editMessageText(msg, {
+      chat_id: res.chat.id,
+      message_id: res.message_id,
+    });
+    await api.editMessageText(
+      "Thank you for your feedback. If ever you encounter some error, please let us know.",
+      {
+        chat_id: res.chat.id,
+        message_id: res.message_id,
+      },
+    );
+
+    setTimeout(() => {
+      api.deleteMessage(res.chat.id, res.message_id);
+    }, 5000);
   }
 };
