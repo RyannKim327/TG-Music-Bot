@@ -117,6 +117,9 @@ const start = async () => {
           .catch((e) => {});
       } else if (match[0].startsWith("/feedback ")) {
         feedback(api, msg, match[0].substring("/feedback ".length));
+        setTimeout(() => {
+          api.deleteMessage(msg.chat.id, msg.message_id);
+        }, 1000);
       } else {
         if (msg.chat.type === "private" || match[0].startsWith("/music")) {
           if (match[0].startsWith("/")) {
