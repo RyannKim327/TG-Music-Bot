@@ -27,20 +27,16 @@ module.exports = async (api, msg, content) => {
   );
 
   if (data) {
-    await api.editMessageText(msg, {
-      chat_id: res.chat.id,
-      message_id: res.message_id,
-    });
     await api.editMessageText(
       "Thank you for your feedback. If ever you encounter some error, please let us know.",
       {
-        chat_id: res.chat.id,
-        message_id: res.message_id,
+        chat_id: send.chat.id,
+        message_id: send.message_id,
       },
     );
 
     setTimeout(() => {
-      api.deleteMessage(res.chat.id, res.message_id);
+      api.deleteMessage(send.chat.id, send.message_id);
     }, 5000);
   }
 };
