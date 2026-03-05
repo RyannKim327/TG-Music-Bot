@@ -83,6 +83,7 @@ module.exports = async (api, msg, search) => {
           "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
       },
       async (r) => {
+        log("LOGS", r.headers);
         if (r.statusCode !== 200) {
           console.log("Download failed:", r.statusCode);
           return;
