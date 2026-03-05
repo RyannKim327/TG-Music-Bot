@@ -74,36 +74,41 @@ module.exports = async (api, msg, search) => {
   );
   log("MUSIC", JSON.stringify(data, null, 2));
   http.get(data.url, async (r) => {
+    if (r.statusCode !== 200) {
+      console.log("Download failed:", r.statusCode);
+      return;
+    }
     r.pipe(file);
     file.on("finish", async () => {
-      fs.stat(filename, (error, f) => {
-        // $_ = f.size;
+      file.close();
+      // fs.stat(filename, (error, f) => {
+      // $_ = f.size;
 
-        // console.log($_);
-        // if ($_ >= 1000) {
-        api
-          .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
-          .then((_) => {
-            if (fs.existsSync(filename)) {
-              setTimeout(() => {
-                fs.unlinkSync(filename, (e) => {});
-              }, 10000);
-            }
-            api.deleteMessage(res.chat.id, res.message_id);
-          })
-          .catch((e) => {});
-        // } else {
-        //   res = editMessage(api, res, `[ERR]: The file is corrupted`);
-        //   if (fs.existsSync(filename)) {
-        //     setTimeout(() => {
-        //       fs.unlinkSync(filename, (e) => {});
-        //     }, 100);
-        //   }
-        //   setTimeout(() => {
-        //     api.deleteMessage(res.chat.id, res.message_id);
-        //   }, 5000);
-        // }
-      });
+      // console.log($_);
+      // if ($_ >= 1000) {
+      api
+        .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
+        .then((_) => {
+          if (fs.existsSync(filename)) {
+            setTimeout(() => {
+              fs.unlinkSync(filename, (e) => {});
+            }, 5000);
+          }
+          api.deleteMessage(res.chat.id, res.message_id);
+        })
+        .catch((e) => {});
+      // } else {
+      //   res = editMessage(api, res, `[ERR]: The file is corrupted`);
+      //   if (fs.existsSync(filename)) {
+      //     setTimeout(() => {
+      //       fs.unlinkSync(filename, (e) => {});
+      //     }, 100);
+      //   }
+      //   setTimeout(() => {
+      //     api.deleteMessage(res.chat.id, res.message_id);
+      //   }, 5000);
+      // }
+      // });
     });
   });
 };
