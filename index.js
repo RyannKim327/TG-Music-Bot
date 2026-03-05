@@ -57,7 +57,9 @@ const start = async () => {
         c("Server Initiator", "Developed under MPOP Reverse II");
       });
     } else {
-      api = new tg(token);
+      api = new tg(token, {
+        polling: true,
+      });
     }
 
     if (fs.existsSync(directory)) {
