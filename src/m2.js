@@ -76,32 +76,32 @@ module.exports = async (api, msg, search) => {
     r.pipe(file);
     file.on("finish", async () => {
       fs.stat(filename, (error, f) => {
-        $_ = f.size;
+        // $_ = f.size;
 
-        console.log($_);
-        if ($_ >= 1000) {
-          api
-            .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
-            .then((_) => {
-              if (fs.existsSync(filename)) {
-                setTimeout(() => {
-                  fs.unlinkSync(filename, (e) => {});
-                }, 10000);
-              }
-              api.deleteMessage(res.chat.id, res.message_id);
-            })
-            .catch((e) => {});
-        } else {
-          res = editMessage(api, res, `[ERR]: The file is corrupted`);
-          if (fs.existsSync(filename)) {
-            setTimeout(() => {
-              fs.unlinkSync(filename, (e) => {});
-            }, 100);
-          }
-          setTimeout(() => {
+        // console.log($_);
+        // if ($_ >= 1000) {
+        api
+          .sendAudio(msg.chat.id, fs.createReadStream(filename), {}, {})
+          .then((_) => {
+            if (fs.existsSync(filename)) {
+              setTimeout(() => {
+                fs.unlinkSync(filename, (e) => {});
+              }, 10000);
+            }
             api.deleteMessage(res.chat.id, res.message_id);
-          }, 5000);
-        }
+          })
+          .catch((e) => {});
+        // } else {
+        //   res = editMessage(api, res, `[ERR]: The file is corrupted`);
+        //   if (fs.existsSync(filename)) {
+        //     setTimeout(() => {
+        //       fs.unlinkSync(filename, (e) => {});
+        //     }, 100);
+        //   }
+        //   setTimeout(() => {
+        //     api.deleteMessage(res.chat.id, res.message_id);
+        //   }, 5000);
+        // }
       });
     });
   });
