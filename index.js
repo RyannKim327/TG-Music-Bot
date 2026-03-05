@@ -35,7 +35,9 @@ const start = async () => {
     let api = null;
 
     if (url.length > 1) {
-      api = new tg(token);
+      api = new tg(token, {
+        polling: true,
+      });
       const app = express();
       app.use(express.json());
 
