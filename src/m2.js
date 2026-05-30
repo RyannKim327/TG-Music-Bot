@@ -45,6 +45,26 @@ module.exports = async (api, msg, search) => {
       api.deleteMessage(res.chat.id, res.message_id);
     }, 5000);
   }
+  const ytRegex = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/
+
+  if (!ytRegex.test(search)) {
+    const ytSearch = await axios.get(`https://yt-dlp-stream.onrender.com/api/v3/`, {
+      params: {
+        q: search
+      }
+    }).then(res => {
+      return res.data.results[0]
+    }).catch(e => {
+      console.error(e)
+      return search
+    })
+
+    search = ytSearch
+
+  } else {
+    search = search.match(ytRegex)[1]
+  }
+
   const data = await axios
     .get(`${process.env.API_BACKEND}/yt?videoID=${encodeURIComponent(search)}`)
     .then((r) => {
@@ -76,7 +96,7 @@ module.exports = async (api, msg, search) => {
   api.sendAudio(msg.chat.id, data.url, {}, {}).then((_) => {
     if (fs.existsSync(filename)) {
       setTimeout(() => {
-        fs.unlinkSync(filename, (e) => {});
+        fs.unlinkSync(filename, (e) => { });
       }, 5000);
     }
     api.deleteMessage(res.chat.id, res.message_id);
@@ -113,12 +133,12 @@ module.exports = async (api, msg, search) => {
             .then((_) => {
               if (fs.existsSync(filename)) {
                 setTimeout(() => {
-                  fs.unlinkSync(filename, (e) => {});
+                  fs.unlinkSync(filename, (e) => { });
                 }, 5000);
               }
               api.deleteMessage(res.chat.id, res.message_id);
             })
-            .catch((e) => {});
+            .catch((e) => { });
           // } else {
           //   res = editMessage(api, res, `[ERR]: The file is corrupted`);
           //   if (fs.existsSync(filename)) {
