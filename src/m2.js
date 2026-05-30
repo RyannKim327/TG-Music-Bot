@@ -65,6 +65,9 @@ module.exports = async (api, msg, search) => {
     search = search.match(ytRegex)[1]
   }
 
+  console.log("Test Log")
+  console.log(search)
+
   const data = await axios
     .get(`${process.env.API_BACKEND}/yt?videoID=${encodeURIComponent(search)}`)
     .then((r) => {
