@@ -53,7 +53,7 @@ module.exports = async (api, msg, search) => {
         q: search
       }
     }).then(res => {
-      return res.data.results[0]
+      return res.data.results[0].video_id
     }).catch(e => {
       console.error(e)
       return search
