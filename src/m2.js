@@ -45,6 +45,8 @@ module.exports = async (api, msg, search) => {
       api.deleteMessage(res.chat.id, res.message_id);
     }, 5000);
   }
+
+
   const ytRegex = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/
 
   if (!ytRegex.test(search)) {
@@ -64,6 +66,8 @@ module.exports = async (api, msg, search) => {
 
   console.log("Test Log")
   console.log(search)
+
+  res = editMessage(api, res, "Music Found");
 
   const data = await axios
     .get(`${process.env.API_BACKEND}/yt?videoID=${encodeURIComponent(search)}`)
