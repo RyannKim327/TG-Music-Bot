@@ -34,14 +34,14 @@ export default async function music(api: TelegramBot, event: Message, body: stri
   if (data.error) {
     message = await editMessage(api, event, `ERR [${body}]: An error occured`) as Message
     try {
-      api.deleteMessage(message.chat.id, message.message_id)
+      api.deleteMessage(event.chat.id, event.message_id)
     } catch (e) { }
 
   }
 
-  api.sendAudio(message.chat.id, data.url, {}, {}).then((_) => {
+  api.sendAudio(event.chat.id, data.url, {}, {}).then((_) => {
     try {
-      api.deleteMessage(message.chat.id, message.message_id)
+      api.deleteMessage(event.chat.id, event.message_id)
     } catch (e) { };
   });
 
