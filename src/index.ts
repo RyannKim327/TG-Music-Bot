@@ -42,7 +42,7 @@ function main() {
 
       api.setWebhook(`${url}/bot${token}`)
 
-      app.post(`bot${token}`, (req: Request, res: Response) => {
+      app.post(`/bot${token}`, (req: Request, res: Response) => {
         api?.processUpdate(req.body)
         res.sendStatus(200)
       })
