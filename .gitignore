@@ -1,4 +1,5 @@
 .env
 logs.txt
 node_modules
+src/temp
 temp

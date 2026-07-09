@@ -50,7 +50,7 @@ module.exports = async (api, msg, search) => {
   const ytRegex = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/
 
   if (!ytRegex.test(search)) {
-    const ytSearch = await axios.get(`https://yt-dlp-stream.onrender.com/api/v3/q?=${encodeURIComponent(search)}`)
+    const ytsearch = await axios.get(`https://yt-dlp-stream.onrender.com/api/v3/q?=${encodeuricomponent(search)}`)
       .then(res => {
         return res.data.results[0].video_id
       }).catch(e => {
@@ -58,7 +58,7 @@ module.exports = async (api, msg, search) => {
         return search
       })
 
-    search = ytSearch
+    search = ytsearch
 
   } else {
     search = search.match(ytRegex)[1]
