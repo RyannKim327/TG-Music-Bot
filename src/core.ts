@@ -21,7 +21,7 @@ export default function core(api: TelegramBot, event: Message, regex: RegExpExec
         } catch (e) { }
       }
     } else {
-      if (body.startsWith("/music ") || event.chat.type === "private") {
+      if (body.startsWith("/music") || event.chat.type === "private") {
         if (body.startsWith("/")) {
           let split = body.split(" ")
           split.shift()
