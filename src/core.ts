@@ -28,7 +28,9 @@ export default function core(api: TelegramBot, event: Message, regex: RegExpExec
         music(api, event, body)
       }
     }
-    api.deleteMessage(event.chat.id, event.message_id)
+    try {
+      api.deleteMessage(event.chat.id, event.message_id)
+    } catch (e) { }
   }
 }
 
