@@ -74,6 +74,7 @@ function main() {
     log("Welcome", "Server Loaded and Running")
 
     api.onText(/([\w\W]+)/gi, (message: Message, regex: RegExpExecArray | null) => {
+      console.log(regex?.[0])
       core(api, message, regex)
     })
 
