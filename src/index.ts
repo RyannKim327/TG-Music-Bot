@@ -48,7 +48,7 @@ function main() {
       })
 
       app.listen(process.env.PORT || 3000, () => {
-        log("Server Initiator", "Server starter")
+        log("Server Initiator", "Server starter using Webhook")
         log("Server Initiator", "Developed by MPOP Reverse II")
       })
 
@@ -57,7 +57,7 @@ function main() {
       api = new TelegramBot(token, {
         polling: true
       })
-      log("Server Initiator", "Server starter")
+      log("Server Initiator", "Server starter using polling")
       log("Server Initiator", "Developed by MPOP Reverse II")
     }
 
