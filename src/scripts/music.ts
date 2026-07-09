@@ -27,7 +27,7 @@ export default async function music(api: TelegramBot, event: Message, body: stri
     body = body.match(ytRegex)?.[1] ?? body
   }
 
-  let message = await api.sendMessage(event.chat.id, `Searching for the song/youtube ${ytRegex.test(body) ? "Youtube ID" : "song"} ${body}`)
+  let message = await api.sendMessage(event.chat.id, `Searching for the ${ytRegex.test(body) ? "Youtube ID" : "song"} ${body}`)
 
   const { data } = await axios.get(`${process.env.API_BACKEND}/yt?videoID=${encodeURIComponent(body)}`)
 
