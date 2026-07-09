@@ -2,7 +2,8 @@ import TelegramBot, { Message } from "node-telegram-bot-api";
 import music from "./scripts/music";
 
 export default function core(api: TelegramBot, event: Message, regex: RegExpExecArray | null) {
-  if (regex) {
+  console.log(regex)
+  if (regex !== null) {
     let body = regex[0]
     if (body.startsWith("/start")) {
       // TODO: Welcomer
