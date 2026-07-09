@@ -12,8 +12,6 @@ async function editMessage(api: TelegramBot, event: Message, message: string) {
 export default async function music(api: TelegramBot, event: Message, body: string) {
   const ytRegex = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/
 
-  let message = await api.sendMessage(event.chat.id, `Searching for the song/youtube ${ytRegex.test(body) ? "Youtube ID" : "song"} ${body}`)
-
   if (!ytRegex.test(body)) {
     const ytSearch = await axios.get(`https://yt-dlp-stream.onrender.com/api/v3/q?=${encodeURIComponent(body)}`)
       .then(res => {
@@ -28,6 +26,8 @@ export default async function music(api: TelegramBot, event: Message, body: stri
   } else {
     body = body.match(ytRegex)?.[1] ?? body
   }
+
+  let message = await api.sendMessage(event.chat.id, `Searching for the song/youtube ${ytRegex.test(body) ? "Youtube ID" : "song"} ${body}`)
 
   const { data } = await axios.get(`${process.env.API_BACKEND}/yt?videoID=${encodeURIComponent(body)}`)
 
