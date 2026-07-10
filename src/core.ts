@@ -15,7 +15,9 @@ export default function core(api: TelegramBot, event: Message, regex: RegExpExec
         }).catch(e => { })
     } else if (body.startsWith("/delete")) {
       if (event.reply_to_message) {
-        api.deleteMessage(event.reply_to_message.chat.id, event.reply_to_message.message_id)
+        try {
+          api.deleteMessage(event.reply_to_message.chat.id, event.reply_to_message.message_id)
+        } catch (e) { }
         try {
           api.deleteMessage(event.chat.id, event.message_id)
         } catch (e) { }
