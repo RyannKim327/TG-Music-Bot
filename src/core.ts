@@ -2,7 +2,6 @@ import TelegramBot, { Message } from "node-telegram-bot-api";
 import music from "./scripts/music";
 
 export default function core(api: TelegramBot, event: Message, regex: RegExpExecArray | null) {
-  console.log(regex)
   if (regex !== null) {
     let body = regex[0]
     if (body.startsWith("/start")) {
@@ -33,7 +32,9 @@ export default function core(api: TelegramBot, event: Message, regex: RegExpExec
       }
     }
     try {
-      api.deleteMessage(event.chat.id, event.message_id)
+      if (event.chat.type === "private") {
+        api.deleteMessage(event.chat.id, event.message_id)
+      }
     } catch (e) { }
   }
 }
