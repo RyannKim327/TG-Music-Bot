@@ -29,6 +29,16 @@ export default async function music(api: TelegramBot, event: Message, body: stri
     body = body.match(ytRegex)?.[1] ?? body
   }
 
+  if (body.length <= 0) {
+    editMessage(api, message, "Please provide the music you want to hear")
+    setTimeout(() => {
+      try {
+        api.deleteMessage(message.chat.id, message.message_id)
+      } catch (e) { }
+    }, 2500)
+    return
+  }
+
   const { data } = await axios.get(`${process.env.API_BACKEND}/yt?videoID=${encodeURIComponent(body)}`)
 
   if (data.error) {
