@@ -1,5 +1,6 @@
 import TelegramBot, { Message } from "node-telegram-bot-api";
 import music from "./scripts/music";
+import feedback from "./scripts/feedback";
 
 export default function core(api: TelegramBot, event: Message, regex: RegExpExecArray | null) {
   if (regex !== null) {
@@ -21,6 +22,10 @@ export default function core(api: TelegramBot, event: Message, regex: RegExpExec
           api.deleteMessage(event.chat.id, event.message_id)
         } catch (e) { }
       }
+    } else if (body.startsWith("/feedback")) {
+      const bods = body.split(" ")
+      bods.shift()
+      feedback(api, event, bods.join(" "))
     } else {
       if (body.startsWith("/music") || event.chat.type === "private") {
         if (body.startsWith("/")) {
