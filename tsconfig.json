@@ -7,10 +7,10 @@
     "strict": true,
     "noImplicitAny": true,
     "moduleResolution": "node",
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
       "@/*": [
-        "src/*"
+        "./src/*"
       ]
     },
     "esModuleInterop": true
