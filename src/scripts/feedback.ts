@@ -5,11 +5,11 @@ import { CookieJar } from "tough-cookie";
 
 export default async function feedback(api: TelegramBot, event: Message, body: string) {
   const send = await api.sendMessage(event.chat.id, "Sending feedback, please don't delete this message")
-  return
+
   const jar = new CookieJar()
   const client = wrapper(
     axios.create({
-      jar: jar,
+      jar: jar as CookieJar,
       withCredentials: true
     }))
 
