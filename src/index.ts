@@ -77,7 +77,7 @@ function main() {
       core(api, message, regex)
     })
 
-  } catch (e) {
+  } catch (e: any) {
     log("Main Catch", e.toString(), "e")
   }
 
