@@ -9,7 +9,7 @@ export default async function feedback(api: TelegramBot, event: Message, body: s
   const jar = new CookieJar()
   const client = wrapper(
     axios.create({
-      jar,
+      jar: jar,
       withCredentials: true
     }))
 
